@@ -1,0 +1,578 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="description" content="KEST0 — Dossiês técnicos de privacidade, OPSEC e vigilância digital.">
+<meta http-equiv="Content-Security-Policy" content="default-src 'self'; style-src 'self' 'unsafe-inline'; script-src 'self' 'unsafe-inline'; img-src 'self' data:; font-src 'self'; connect-src 'self'; frame-ancestors 'none'; base-uri 'self'; form-action 'self';">
+<meta name="referrer" content="no-referrer">
+<title>KEST0 — Dossiês de Privacidade</title>
+<style>
+  :root{
+    --bg-0:#05070A;
+    --bg-1:#0B0F14;
+    --bg-2:#121820;
+    --line:#1A2230;
+    --fg-0:#C9F7A8;
+    --fg-1:#8FBF7A;
+    --fg-2:#5A6B55;
+    --accent:#7CFF6B;
+    --amber:#FFB000;
+    --red:#FF5C5C;
+    --cyan:#4FD1E8;
+    --cyan-dim:rgba(79,209,232,0.25);
+    --mono:"JetBrains Mono","Fira Code","IBM Plex Mono","Cascadia Mono","Consolas","Courier New",monospace;
+  }
+  *{box-sizing:border-box;margin:0;padding:0}
+  html,body{background:var(--bg-0);color:var(--fg-0);font-family:var(--mono);font-size:14px;line-height:1.65;-webkit-font-smoothing:antialiased}
+  body{min-height:100vh;position:relative}
+  body::before{content:"";position:fixed;inset:0;pointer-events:none;z-index:9999;background:repeating-linear-gradient(to bottom,rgba(255,255,255,0.012) 0 1px,transparent 1px 3px);mix-blend-mode:overlay}
+  body::after{content:"";position:fixed;inset:0;pointer-events:none;z-index:9998;background:radial-gradient(ellipse at center,transparent 60%,rgba(0,0,0,0.6) 100%)}
+  a{color:var(--cyan);text-decoration:none;border-bottom:1px dashed rgba(79,209,232,0.35)}
+  a:hover{color:var(--accent);border-bottom-color:var(--accent)}
+
+  /* HEADER */
+  header.site{max-width:1100px;margin:0 auto;padding:40px 24px 20px;display:flex;justify-content:space-between;align-items:flex-end;flex-wrap:wrap;gap:16px;border-bottom:1px solid var(--line)}
+  .brand{display:flex;align-items:center;gap:12px}
+  .brand-mark{width:34px;height:34px;border:1px solid var(--accent);display:grid;place-items:center;color:var(--accent);font-weight:700;font-size:16px;box-shadow:0 0 0 1px rgba(124,255,107,0.12),0 0 14px rgba(124,255,107,0.12) inset}
+  .brand h1{font-size:22px;letter-spacing:0.3em;font-weight:600;color:var(--accent)}
+  .brand h1::after{content:"▌";margin-left:4px;color:var(--accent);animation:blink 1s step-end infinite}
+  @keyframes blink{50%{opacity:0}}
+  .brand-sub{font-size:11px;color:var(--fg-2);letter-spacing:0.15em;text-transform:uppercase;margin-top:4px}
+  .brand-sub b{color:var(--fg-1);font-weight:500}
+
+  /* NAV */
+  nav.primary{max-width:1100px;margin:0 auto;padding:14px 24px;display:flex;flex-wrap:wrap;gap:6px;border-bottom:1px solid var(--line)}
+  nav.primary a{border:none;padding:7px 13px;font-size:11px;letter-spacing:0.18em;text-transform:uppercase;color:var(--fg-1);background:transparent;border:1px solid transparent;border-radius:2px;transition:all 0.15s ease}
+  nav.primary a:hover{color:var(--accent);border-color:var(--line);background:var(--bg-1)}
+  nav.primary a.active{color:var(--accent);border-color:rgba(124,255,107,0.35);background:var(--bg-1)}
+
+  /* MAIN */
+  main{max-width:1100px;margin:0 auto;padding:32px 24px 80px}
+  section{margin-bottom:56px}
+  .crumb{font-size:10px;color:var(--fg-2);letter-spacing:0.2em;text-transform:uppercase;margin-bottom:12px}
+  .crumb a{color:var(--fg-2);border:none}
+  .crumb a:hover{color:var(--accent)}
+  h2.section-title{font-size:13px;letter-spacing:0.3em;text-transform:uppercase;color:var(--accent);margin-bottom:4px;font-weight:600}
+  h2.section-title::before{content:"▮ ";color:var(--fg-2)}
+  .section-sub{color:var(--fg-1);font-size:12px;margin-bottom:22px;max-width:720px}
+
+  /* DOSSIERS LIST */
+  .group{background:var(--bg-1);border:1px solid var(--line);padding:18px 20px;border-radius:2px;margin-bottom:14px}
+  .group-head{display:flex;justify-content:space-between;align-items:baseline;border-bottom:1px dashed var(--line);padding-bottom:8px;margin-bottom:12px}
+  .group-head h3{font-size:11px;letter-spacing:0.25em;text-transform:uppercase;color:var(--accent);font-weight:600}
+  .group-head small{font-size:10px;color:var(--fg-2);letter-spacing:0.1em}
+  .dossier-list{list-style:none;display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:6px}
+  .dossier-list li a{display:flex;justify-content:space-between;align-items:center;gap:10px;padding:8px 10px;border:1px solid transparent;border-radius:2px;color:var(--fg-0);font-size:12px;border-bottom:none;transition:all 0.15s ease}
+  .dossier-list li a:hover{background:var(--bg-2);border-color:var(--line);color:var(--accent)}
+  .dossier-list .meta{font-size:9px;color:var(--fg-2);letter-spacing:0.15em;text-transform:uppercase;white-space:nowrap}
+  .badge{display:inline-block;font-size:8px;letter-spacing:0.2em;text-transform:uppercase;padding:1px 5px;border-radius:2px;margin-left:6px;vertical-align:middle}
+  .badge.new{background:rgba(255,184,0,0.12);color:var(--amber);border:1px solid rgba(255,184,0,0.35)}
+  .badge.interactive{background:rgba(79,209,232,0.08);color:var(--cyan);border:1px solid rgba(79,209,232,0.3)}
+
+  /* ATLAS GLOBAL */
+  .atlas-intro{background:var(--bg-1);border:1px solid var(--line);border-left:3px solid var(--cyan);padding:18px;margin-bottom:18px;border-radius:2px}
+  .atlas-intro h3{font-size:12px;letter-spacing:0.25em;text-transform:uppercase;color:var(--cyan);margin-bottom:6px}
+  .atlas-intro p{font-size:12px;color:var(--fg-1)}
+  .map-wrap{background:var(--bg-1);border:1px solid var(--line);border-radius:2px;padding:16px;margin-bottom:18px}
+  .map-head{display:flex;justify-content:space-between;align-items:center;margin-bottom:10px;font-size:10px;letter-spacing:0.2em;text-transform:uppercase;color:var(--fg-2)}
+  .map-head b{color:var(--cyan);font-weight:600}
+  .map-stage{position:relative;width:100%;aspect-ratio:2/1;background:#020407;border:1px solid var(--line);border-radius:2px;overflow:hidden}
+  .map-stage svg{width:100%;height:100%;display:block}
+  /* Grid sutil */
+  .map-grid line{stroke:rgba(79,209,232,0.06);stroke-width:0.25}
+  .map-grid text{fill:rgba(79,209,232,0.18);font-family:var(--mono);font-size:3px;letter-spacing:0.1em}
+  /* Continentes - estilo Países U: contornos ciano finos, sem preenchimento */
+  .continent{fill:none;stroke:var(--cyan);stroke-width:0.55;stroke-linejoin:round;stroke-linecap:round;opacity:0.85}
+  .continent:hover{stroke:var(--accent);stroke-width:0.8;opacity:1;cursor:pointer}
+  .country{fill:none;stroke:rgba(79,209,232,0.35);stroke-width:0.35;stroke-linejoin:round}
+  .country:hover{stroke:var(--accent);stroke-width:0.6;fill:rgba(124,255,107,0.04);cursor:pointer}
+  /* Nós de vigilância */
+  .node-core{fill:var(--red)}
+  .node-ring{fill:none;stroke:var(--red);stroke-width:0.35;opacity:0.6}
+  .node-pulse{fill:none;stroke:var(--red);stroke-width:0.35;opacity:0;transform-origin:center;animation:sonar 2.6s ease-out infinite}
+  .node-pulse.d2{animation-delay:0.9s}
+  .node-pulse.d3{animation-delay:1.8s}
+  @keyframes sonar{0%{r:1.5;opacity:0.8}100%{r:10;opacity:0}}
+  .node-label{fill:var(--fg-1);font-family:var(--mono);font-size:2.8px;letter-spacing:0.08em}
+  .node-label.t{fill:var(--accent);font-weight:600}
+  .legend{display:flex;flex-wrap:wrap;gap:14px;margin-top:10px;font-size:10px;color:var(--fg-2);letter-spacing:0.1em;text-transform:uppercase}
+  .legend span{display:inline-flex;align-items:center;gap:6px}
+  .legend i{width:8px;height:2px;display:inline-block}
+  .legend .l-cont{background:var(--cyan)}
+  .legend .l-country{background:rgba(79,209,232,0.4)}
+  .legend .l-node{background:var(--red);height:8px;width:8px;border-radius:50%;box-shadow:0 0 5px var(--red)}
+
+  /* Info cards do Atlas */
+  .atlas-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:12px;margin-top:14px}
+  .atlas-card{background:var(--bg-1);border:1px solid var(--line);border-radius:2px;padding:14px;transition:all 0.15s ease}
+  .atlas-card:hover{border-color:var(--cyan-dim);background:var(--bg-2)}
+  .atlas-card h4{font-size:11px;letter-spacing:0.2em;text-transform:uppercase;color:var(--cyan);margin-bottom:8px;font-weight:600}
+  .atlas-card h4 .flag{margin-right:6px;font-size:13px}
+  .atlas-card .law{font-size:11px;color:var(--fg-0);margin-bottom:6px;padding-bottom:6px;border-bottom:1px dashed var(--line)}
+  .atlas-card .law b{color:var(--accent)}
+  .atlas-card .community{font-size:11px;color:var(--fg-1);margin-bottom:4px}
+  .atlas-card .community::before{content:"◈ ";color:var(--cyan)}
+  .atlas-card .oss{font-size:11px;color:var(--fg-2)}
+  .atlas-card .oss::before{content:"⚙ ";color:var(--amber)}
+
+  /* FOOTER */
+  footer{max-width:1100px;margin:40px auto 0;padding:16px 24px;border-top:1px solid var(--line);color:var(--fg-2);font-size:10px;letter-spacing:0.15em;text-transform:uppercase;display:flex;flex-wrap:wrap;justify-content:space-between;gap:10px}
+  footer b{color:var(--accent);font-weight:600}
+
+  @media (max-width:640px){
+    .brand h1{font-size:18px;letter-spacing:0.25em}
+    header.site{padding:28px 18px 16px}
+    main{padding:24px 18px 60px}
+    nav.primary{padding:10px 18px}
+    .map-stage{aspect-ratio:16/10}
+  }
+</style>
+</head>
+<body>
+
+<header class="site" id="home">
+  <div>
+    <div class="brand">
+      <div class="brand-mark">K</div>
+      <h1>KEST0</h1>
+    </div>
+    <div class="brand-sub"><b>kesto</b> · substantivo, esperanto · caixa — arquivo técnico de privacidade</div>
+  </div>
+  <div style="font-size:10px;color:var(--fg-2);letter-spacing:0.15em;text-transform:uppercase;text-align:right">
+    <span style="color:var(--red);display:inline-block;width:6px;height:6px;border-radius:50%;background:var(--red);box-shadow:0 0 6px var(--red);margin-right:6px;vertical-align:middle;animation:pulse 1.6s ease-in-out infinite"></span>AO VIVO<br>
+    <span style="color:var(--fg-1)">20 arquivos · Zero trackers</span>
+  </div>
+</header>
+
+<nav class="primary" aria-label="Navegação principal">
+  <a href="#home" class="active">Início</a>
+  <a href="#ala-dossies">Dossiês</a>
+  <a href="#atlas">Atlas Global</a>
+  <a href="#ala-videos">Vídeos</a>
+  <a href="#ala-tutoriais">Tutoriais</a>
+  <a href="#ala-comunidade">Comunidade</a>
+  <a href="#painel">◆ Painel</a>
+</nav>
+
+<main>
+
+  <!-- DOSSIÊS -->
+  <section id="ala-dossies">
+    <div class="crumb"><a href="#home">Início</a> / Dossiês</div>
+    <h2 class="section-title">Dossiês</h2>
+    <p class="section-sub">20 arquivos organizados por tema. Ao concluir a leitura, você ganha XP e desbloqueia conquistas no <a href="#painel">Painel</a>.</p>
+
+    <div class="group">
+      <div class="group-head"><h3>Grupo 01 · Fundamentos</h3><small>Quem vigia, por que vigia</small></div>
+      <ul class="dossier-list">
+        <li><a href="#"><span>01 · Alguém que não é seu amigo sabe bastante sobre você</span><span class="meta">4 min</span></a></li>
+        <li><a href="#"><span>02 · Altruísmo empresarial não existe</span><span class="meta">5 min</span></a></li>
+        <li><a href="#"><span>03 · O Arsenal Alternativo: Ferramentas</span><span class="meta">10 min</span></a></li>
+        <li><a href="#"><span>04 · O que é OPSEC?</span><span class="meta">5 min</span></a></li>
+        <li><a href="#"><span>05 · Anonimato não é crime</span><span class="meta">7 min</span></a></li>
+        <li><a href="#"><span>06 · TOR: muito além do estigma</span><span class="meta">6 min <span class="badge new">Novo</span></span></a></li>
+      </ul>
+    </div>
+
+    <div class="group">
+      <div class="group-head"><h3>Grupo 02 · Ferramentas Práticas</h3><small>Quiz, checklist, calculadora</small></div>
+      <ul class="dossier-list">
+        <li><a href="#"><span>07 · Qual seu nível de vigilância?</span><span class="meta"><span class="badge interactive">Interativo</span></span></a></li>
+        <li><a href="#"><span>08 · Checklist de OPSEC pessoal</span><span class="meta"><span class="badge interactive">Interativo</span></span></a></li>
+        <li><a href="#"><span>09 · Quanto de você vira dado?</span><span class="meta"><span class="badge interactive">Interativo</span></span></a></li>
+        <li><a href="#"><span>10 · Glossário</span><span class="meta">Referência</span></a></li>
+      </ul>
+    </div>
+
+    <div class="group">
+      <div class="group-head"><h3>Grupo 03 · Brasil, Lei e Casos Reais</h3><small>LGPD, vazamentos, golpes</small></div>
+      <ul class="dossier-list">
+        <li><a href="#"><span>11 · A LGPD e seus direitos</span><span class="meta">8 min</span></a></li>
+        <li><a href="#"><span>12 · Casos reais</span><span class="meta">7 min</span></a></li>
+        <li><a href="#atlas"><span>13 · O mapa da vigilância</span><span class="meta"><span class="badge interactive">Atlas</span></span></a></li>
+        <li><a href="#"><span>14 · Golpes com nome e sobrenome</span><span class="meta">5 min</span></a></li>
+        <li><a href="#"><span>15 · Vigiado pelo app, exposto pelo vazamento</span><span class="meta">6 min</span></a></li>
+      </ul>
+    </div>
+
+    <div class="group">
+      <div class="group-head"><h3>Grupo 04 · Aprofundamento</h3><small>Celular, tríade, IA local</small></div>
+      <ul class="dossier-list">
+        <li><a href="#"><span>16 · O seu celular é um espião de bolso</span><span class="meta">6 min</span></a></li>
+        <li><a href="#"><span>17 · A tríade da sobrevivência digital</span><span class="meta">7 min</span></a></li>
+        <li><a href="#"><span>18 · IAs locais: privacidade no seu próprio hardware</span><span class="meta">7 min <span class="badge new">Novo</span></span></a></li>
+        <li><a href="#"><span>19 · Navegadores e mecanismos de busca sob a lupa</span><span class="meta">6 min</span></a></li>
+        <li><a href="#"><span>20 · Bastidores e fontes</span><span class="meta">4 min</span></a></li>
+      </ul>
+    </div>
+  </section>
+
+  <!-- ATLAS GLOBAL -->
+  <section id="atlas">
+    <div class="crumb"><a href="#home">Início</a> / Atlas Global</div>
+    <h2 class="section-title">Atlas Global</h2>
+    <p class="section-sub">Um mapa vivo das leis de privacidade, comunidades e iniciativas de código aberto ao redor do mundo. Clique em um país para explorar.</p>
+
+    <div class="atlas-intro">
+      <h3>▸ Como usar este mapa</h3>
+      <p>Passe o cursor sobre os contornos dos países para destacá-los. Os pontos vermelhos indicam agências de inteligência com capacidade de interceptação em massa documentada. Abaixo do mapa, você encontrará fichas técnicas por região com leis, comunidades locais e projetos open-source relevantes.</p>
+    </div>
+
+    <div class="map-wrap">
+      <div class="map-head">
+        <span>Mapa Mundi · <b>Atlas Global</b></span>
+        <span>SVG · contornos vetoriais · interativo</span>
+      </div>
+      <div class="map-stage" role="img" aria-label="Mapa mundi com contornos em ciano sobre fundo preto">
+        <svg viewBox="0 0 400 200" preserveAspectRatio="xMidYMid meet" xmlns="http://www.w3.org/2000/svg">
+          <defs>
+            <radialGradient id="nodeGlow" cx="50%" cy="50%" r="50%">
+              <stop offset="0%" stop-color="#FF5C5C" stop-opacity="0.9"/>
+              <stop offset="100%" stop-color="#FF5C5C" stop-opacity="0"/>
+            </radialGradient>
+          </defs>
+
+          <!-- Grade de fundo -->
+          <g class="map-grid">
+            <line x1="0" y1="50" x2="400" y2="50"/>
+            <line x1="0" y1="100" x2="400" y2="100"/>
+            <line x1="0" y1="150" x2="400" y2="150"/>
+            <line x1="100" y1="0" x2="100" y2="200"/>
+            <line x1="200" y1="0" x2="200" y2="200"/>
+            <line x1="300" y1="0" x2="300" y2="200"/>
+            <text x="4" y="48">60°N</text>
+            <text x="4" y="98">0°</text>
+            <text x="4" y="148">60°S</text>
+            <text x="98" y="8">60°W</text>
+            <text x="198" y="8">0°</text>
+            <text x="298" y="8">60°E</text>
+          </g>
+
+          <!-- Continentes - contornos limpos estilo Países U -->
+          <g>
+            <!-- América do Norte -->
+            <path class="continent" d="M55,42 L75,38 L100,36 L118,40 L125,50 L122,60 L115,70 L108,78 L98,85 L88,90 L78,88 L68,80 L60,70 L55,58 Z"/>
+            <!-- América Central -->
+            <path class="continent" d="M88,90 L95,92 L100,98 L98,105 L92,108 L86,102 Z"/>
+            <!-- América do Sul -->
+            <path class="continent" d="M100,110 L115,108 L128,112 L135,125 L132,140 L128,155 L120,170 L112,178 L105,172 L100,158 L98,140 L96,125 Z"/>
+            <!-- Europa -->
+            <path class="continent" d="M178,48 L188,44 L200,42 L212,44 L220,48 L222,56 L218,64 L210,70 L200,72 L190,70 L182,64 L178,56 Z"/>
+            <!-- África -->
+            <path class="continent" d="M188,78 L200,74 L215,74 L228,78 L235,90 L238,105 L235,120 L228,135 L218,148 L208,155 L198,152 L190,142 L186,125 L184,105 L186,90 Z"/>
+            <!-- Ásia -->
+            <path class="continent" d="M222,44 L240,40 L260,38 L280,38 L300,40 L318,44 L330,52 L335,62 L332,75 L325,85 L315,92 L300,96 L285,98 L270,96 L255,92 L240,85 L228,75 L222,62 Z"/>
+            <!-- Índia -->
+            <path class="continent" d="M270,96 L280,98 L285,110 L282,125 L275,132 L268,125 L265,110 Z"/>
+            <!-- Sudeste Asiático -->
+            <path class="continent" d="M300,96 L310,98 L315,108 L312,118 L305,122 L298,118 L295,108 Z"/>
+            <!-- Oceania / Austrália -->
+            <path class="continent" d="M315,135 L330,132 L348,132 L358,140 L355,152 L345,160 L330,162 L318,158 L312,148 Z"/>
+            <!-- Nova Zelândia -->
+            <path class="continent" d="M355,162 L360,160 L362,168 L358,175 L354,170 Z"/>
+            <!-- Groenlândia -->
+            <path class="continent" d="M130,28 L145,24 L155,28 L152,38 L142,42 L132,38 Z"/>
+            <!-- Japão -->
+            <path class="continent" d="M332,62 L336,68 L334,78 L330,74 Z"/>
+            <!-- Reino Unido -->
+            <path class="continent" d="M178,48 L182,44 L184,50 L182,56 L178,54 Z"/>
+            <!-- Madagascar -->
+            <path class="continent" d="M232,130 L236,128 L238,138 L234,142 L230,138 Z"/>
+          </g>
+
+          <!-- Divisões internas sutis (países) -->
+          <g>
+            <!-- Brasil -->
+            <path class="country" d="M105,118 L118,115 L125,125 L122,140 L115,155 L108,152 L102,138 Z"/>
+            <!-- EUA -->
+            <path class="country" d="M62,48 L80,44 L98,46 L105,54 L102,64 L92,68 L78,66 L65,60 Z"/>
+            <!-- Canadá -->
+            <path class="country" d="M60,38 L80,34 L100,36 L115,40 L118,48 L105,48 L85,46 L65,44 Z"/>
+            <!-- Rússia -->
+            <path class="country" d="M240,38 L270,36 L300,38 L320,42 L325,52 L310,54 L280,52 L250,50 Z"/>
+            <!-- China -->
+            <path class="country" d="M285,58 L310,56 L325,62 L322,75 L310,80 L295,78 L285,70 Z"/>
+            <!-- Índia -->
+            <path class="country" d="M270,96 L280,98 L285,110 L282,125 L275,132 L268,125 L265,110 Z"/>
+            <!-- Austrália -->
+            <path class="country" d="M315,135 L330,132 L348,132 L358,140 L355,152 L345,160 L330,162 L318,158 L312,148 Z"/>
+            <!-- Alemanha -->
+            <path class="country" d="M200,52 L208,50 L210,58 L206,64 L200,62 Z"/>
+            <!-- França -->
+            <path class="country" d="M188,56 L196,54 L198,62 L194,68 L188,64 Z"/>
+            <!-- África do Sul -->
+            <path class="country" d="M208,142 L218,140 L222,148 L218,155 L210,152 Z"/>
+            <!-- Argentina -->
+            <path class="country" d="M108,155 L115,158 L118,170 L112,178 L105,172 Z"/>
+          </g>
+
+          <!-- Nós de vigilância -->
+          <g>
+            <g transform="translate(82,56)">
+              <circle class="node-pulse" r="1.5"/><circle class="node-pulse d2" r="1.5"/><circle class="node-pulse d3" r="1.5"/>
+              <circle class="node-ring" r="3"/><circle class="node-core" r="1.2"/>
+              <text class="node-label t" x="4" y="-2">NSA · EUA</text>
+            </g>
+            <g transform="translate(181,50)">
+              <circle class="node-pulse" r="1.5"/><circle class="node-pulse d2" r="1.5"/>
+              <circle class="node-ring" r="3"/><circle class="node-core" r="1.2"/>
+              <text class="node-label t" x="4" y="-2">GCHQ · UK</text>
+            </g>
+            <g transform="translate(138,32)">
+              <circle class="node-pulse" r="1.5"/>
+              <circle class="node-ring" r="2.5"/><circle class="node-core" r="1"/>
+              <text class="node-label" x="4" y="-2">CSE · CA</text>
+            </g>
+            <g transform="translate(350,148)">
+              <circle class="node-pulse" r="1.5"/><circle class="node-pulse d2" r="1.5"/>
+              <circle class="node-ring" r="3"/><circle class="node-core" r="1.2"/>
+              <text class="node-label t" x="-30" y="-3">ASD · AU</text>
+            </g>
+            <g transform="translate(358,168)">
+              <circle class="node-pulse" r="1.5"/>
+              <circle class="node-ring" r="2.5"/><circle class="node-core" r="1"/>
+              <text class="node-label" x="-22" y="4">GCSB · NZ</text>
+            </g>
+            <g transform="translate(204,58)">
+              <circle class="node-pulse" r="1.5"/>
+              <circle class="node-ring" r="2.5"/><circle class="node-core" r="1"/>
+              <text class="node-label" x="4" y="2">BND · DE</text>
+            </g>
+            <g transform="translate(290,48)">
+              <circle class="node-pulse" r="1.5"/><circle class="node-pulse d2" r="1.5"/>
+              <circle class="node-ring" r="3"/><circle class="node-core" r="1.2"/>
+              <text class="node-label t" x="4" y="-2">FSB · RU</text>
+            </g>
+            <g transform="translate(305,72)">
+              <circle class="node-pulse" r="1.5"/>
+              <circle class="node-ring" r="3"/><circle class="node-core" r="1.2"/>
+              <text class="node-label t" x="4" y="2">MSS · CN</text>
+            </g>
+            <g transform="translate(115,138)">
+              <circle class="node-pulse" r="1.5"/>
+              <circle class="node-ring" r="2.5"/><circle class="node-core" r="1.1"/>
+              <text class="node-label t" x="4" y="-2">ABIN · BR</text>
+            </g>
+            <g transform="translate(192,62)">
+              <circle class="node-pulse" r="1.5"/>
+              <circle class="node-ring" r="2.5"/><circle class="node-core" r="1"/>
+              <text class="node-label" x="-22" y="4">DGSE · FR</text>
+            </g>
+            <g transform="translate(277,118)">
+              <circle class="node-pulse" r="1.5"/>
+              <circle class="node-ring" r="2.5"/><circle class="node-core" r="1"/>
+              <text class="node-label" x="4" y="2">RAW · IN</text>
+            </g>
+            <g transform="translate(215,148)">
+              <circle class="node-pulse" r="1.5"/>
+              <circle class="node-ring" r="2.5"/><circle class="node-core" r="1"/>
+              <text class="node-label" x="4" y="2">NIA · ZA</text>
+            </g>
+          </g>
+
+          <text x="10" y="195" fill="rgba(79,209,232,0.4)" font-family="monospace" font-size="2.8" letter-spacing="0.1em">
+            FONTES: SNOWDEN 2013 · WIKILEAKS · ACCESS NOW · EFF · REL. PÚBLICOS
+          </text>
+        </svg>
+      </div>
+      <div class="legend">
+        <span><i class="l-cont"></i> Contorno continental</span>
+        <span><i class="l-country"></i> Divisão interna (país)</span>
+        <span><i class="l-node"></i> Agência SIGINT documentada</span>
+        <span>Render: SVG inline · zero requisições externas</span>
+      </div>
+    </div>
+
+    <!-- Fichas técnicas por região -->
+    <div class="atlas-grid">
+
+      <div class="atlas-card">
+        <h4><span class="flag">🇺🇸</span>Estados Unidos</h4>
+        <div class="law"><b>Lei:</b> Privacy Act (1974), CCPA (Califórnia), BIPA (Illinois). Sem lei federal abrangente.</div>
+        <div class="community">Electronic Frontier Foundation (EFF)</div>
+        <div class="community">Access Now · Washington DC</div>
+        <div class="oss">Signal Foundation · Tor Project · Mozilla</div>
+      </div>
+
+      <div class="atlas-card">
+        <h4><span class="flag">🇪🇺</span>União Europeia</h4>
+        <div class="law"><b>Lei:</b> GDPR (Regulamento Geral de Proteção de Dados) — padrão ouro global desde 2018.</div>
+        <div class="community">EDRi (European Digital Rights Initiative)</div>
+        <div class="community">La Quadrature du Net (França)</div>
+        <div class="oss">Nextcloud · Proton · Tutanota · Matrix.org</div>
+      </div>
+
+      <div class="atlas-card">
+        <h4><span class="flag">🇧🇷</span>Brasil</h4>
+        <div class="law"><b>Lei:</b> LGPD (Lei 13.709/2018) — em vigor desde 2020. Autoridade: ANPD.</div>
+        <div class="community">Coding Rights · Internet Lab</div>
+        <div class="community">Comitê Gestor da Internet (CGI.br)</div>
+        <div class="oss">Serpro (gov) · TLSNotary BR · Criptografia sem Fronteiras</div>
+      </div>
+
+      <div class="atlas-card">
+        <h4><span class="flag">🇩🇪</span>Alemanha</h4>
+        <div class="law"><b>Lei:</b> BDSG (Bundesdatenschutzgesetz) + GDPR. Uma das culturas de privacidade mais fortes do mundo.</div>
+        <div class="community">Chaos Computer Club (CCC) — maior associação de hackers da Europa</div>
+        <div class="community">Digitale Gesellschaft</div>
+        <div class="oss">Nextcloud · GnuPG · KDE · FSFE</div>
+      </div>
+
+      <div class="atlas-card">
+        <h4><span class="flag">🇷</span>Rússia</h4>
+        <div class="law"><b>Lei:</b> Lei Yarovaya (2016) — obriga retenção de dados e acesso a chaves criptográficas. SORM-3 para interceptação.</div>
+        <div class="community">RoskomSvoboda (luta contra censura)</div>
+        <div class="community">OpenMedia (extinta, legado documentado)</div>
+        <div class="oss">Qubes OS (contribuições) · WireGuard (origem russa)</div>
+      </div>
+
+      <div class="atlas-card">
+        <h4><span class="flag">🇨🇳</span>China</h4>
+        <div class="law"><b>Lei:</b> PIPL (Personal Information Protection Law, 2021) — similar ao GDPR na forma, mas com exceções amplas para segurança nacional.</div>
+        <div class="community">GreatFire.org (monitoramento de censura)</div>
+        <div class="community">China Digital Times</div>
+        <div class="oss">Shadowsocks · V2Ray · Trojan (ferramentas de contorno)</div>
+      </div>
+
+      <div class="atlas-card">
+        <h4><span class="flag">🇮🇳</span>Índia</h4>
+        <div class="law"><b>Lei:</b> DPDP Act (2023) — Digital Personal Data Protection. Substitui o projeto de 2019 após decisão do Supremo sobre privacidade como direito fundamental.</div>
+        <div class="community">Internet Freedom Foundation (IFF)</div>
+        <div class="community">Software Freedom Law Centre of India</div>
+        <div class="oss">Signal (adoção massiva) · local-first apps</div>
+      </div>
+
+      <div class="atlas-card">
+        <h4><span class="flag">🇦🇺</span>Austrália / NZ</h4>
+        <div class="law"><b>Lei:</b> Privacy Act 1988 (AU) · Privacy Act 2020 (NZ). Membros do Five Eyes.</div>
+        <div class="community">Digital Rights Watch (AU)</div>
+        <div class="community">Tech Liberty NZ</div>
+        <div class="oss">Signal · Session (desenvolvido na Austrália)</div>
+      </div>
+
+      <div class="atlas-card">
+        <h4><span class="flag">🇿🇦</span>África do Sul</h4>
+        <div class="law"><b>Lei:</b> POPIA (Protection of Personal Information Act, 2020) — inspirada no GDPR.</div>
+        <div class="community">Right2Know Campaign</div>
+        <div class="community">Code for South Africa</div>
+        <div class="oss">OpenUp · Driftwood (ferramentas locais)</div>
+      </div>
+
+      <div class="atlas-card">
+        <h4><span class="flag">🇯🇵</span>Japão</h4>
+        <div class="law"><b>Lei:</b> APPI (Act on Protection of Personal Information) — reformada em 2022 com multas mais altas.</div>
+        <div class="community">Japan Internet Providers Association</div>
+        <div class="community">Human Rights Now</div>
+        <div class="oss">Sakura VPS (privacy-friendly hosting) · Line (E2EE)</div>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- VÍDEOS -->
+  <section id="ala-videos">
+    <div class="crumb"><a href="#home">Início</a> / Vídeos</div>
+    <h2 class="section-title">Vídeos</h2>
+    <p class="section-sub">Conteúdo em vídeo produzido de forma independente, aprofundando os temas dos dossiês.</p>
+    <div style="background:var(--bg-1);border:1px solid var(--line);padding:18px;border-radius:2px;max-width:520px">
+      <span style="font-size:10px;color:var(--amber);letter-spacing:0.2em;text-transform:uppercase">◐ Em breve</span>
+      <h3 style="font-size:13px;letter-spacing:0.18em;text-transform:uppercase;color:var(--accent);margin:8px 0">▶ Em produção</h3>
+      <p style="font-size:12px;color:var(--fg-1)">Os primeiros vídeos estão sendo roteirizados. Sem anúncios, sem rastreamento de reprodução, sem player de terceiros.</p>
+    </div>
+  </section>
+
+  <!-- TUTORIAIS -->
+  <section id="ala-tutoriais">
+    <div class="crumb"><a href="#home">Início</a> / Tutoriais</div>
+    <h2 class="section-title">Tutoriais de Ferramentas</h2>
+    <p class="section-sub">Passo a passo ilustrado para instalar e configurar ferramentas de privacidade em sistemas desktop e mobile.</p>
+    <div style="background:var(--bg-1);border:1px solid var(--line);padding:18px;border-radius:2px;max-width:520px">
+      <span style="font-size:10px;color:var(--amber);letter-spacing:0.2em;text-transform:uppercase">◐ Em breve</span>
+      <h3 style="font-size:13px;letter-spacing:0.18em;text-transform:uppercase;color:var(--accent);margin:8px 0">⚙ Em produção</h3>
+      <p style="font-size:12px;color:var(--fg-1)">Cada tutorial cobrirá uma ferramenta específica, com passo a passo ilustrado e validado em múltiplos sistemas.</p>
+    </div>
+  </section>
+
+  <!-- COMUNIDADE -->
+  <section id="ala-comunidade">
+    <div class="crumb"><a href="#home">Início</a> / Comunidade</div>
+    <h2 class="section-title">Comunidade no Discord</h2>
+    <p class="section-sub">Construir um fórum próprio é custoso. O Discord foi escolhido por ser gratuito e acessível. Lá você tira dúvidas, relata golpes e recebe ajuda com configurações.</p>
+    <div style="background:var(--bg-1);border:1px solid var(--line);padding:18px;border-radius:2px;max-width:640px">
+      <span style="font-size:10px;color:var(--red);letter-spacing:0.2em;text-transform:uppercase"><span style="display:inline-block;width:6px;height:6px;border-radius:50%;background:var(--red);box-shadow:0 0 6px var(--red);margin-right:6px;vertical-align:middle;animation:pulse 1.6s ease-in-out infinite"></span>Ao vivo</span>
+      <h3 style="font-size:13px;letter-spacing:0.18em;text-transform:uppercase;color:var(--accent);margin:8px 0">Canais</h3>
+      <div style="display:flex;flex-wrap:wrap;gap:6px;margin:10px 0">
+        <code style="background:var(--bg-2);border:1px solid var(--line);padding:5px 9px;font-size:11px;color:var(--cyan);border-radius:2px">#dúvidas-gerais</code>
+        <code style="background:var(--bg-2);border:1px solid var(--line);padding:5px 9px;font-size:11px;color:var(--cyan);border-radius:2px">#configurações</code>
+        <code style="background:var(--bg-2);border:1px solid var(--line);padding:5px 9px;font-size:11px;color:var(--cyan);border-radius:2px">#golpes-e-alertas</code>
+        <code style="background:var(--bg-2);border:1px solid var(--line);padding:5px 9px;font-size:11px;color:var(--cyan);border-radius:2px">#sugestões</code>
+      </div>
+      <p><a href="https://discord.gg/hHM4nR77n" rel="nofollow noopener noreferrer" target="_blank">→ Entrar no Discord do KEST0</a></p>
+    </div>
+  </section>
+
+  <!-- PAINEL -->
+  <section id="painel">
+    <div class="crumb"><a href="#home">Início</a> / Painel</div>
+    <h2 class="section-title">Painel do Operador</h2>
+    <p class="section-sub">Seu progresso pessoal é salvo <b>localmente</b> no seu navegador (localStorage). Nenhum byte é enviado para servidores externos.</p>
+
+    <div style="background:var(--bg-1);border:1px solid var(--line);border-radius:2px;padding:20px;display:grid;grid-template-columns:repeat(auto-fit,minmax(160px,1fr));gap:12px">
+      <div style="background:var(--bg-2);border:1px solid var(--line);padding:12px;border-radius:2px">
+        <div style="font-size:9px;letter-spacing:0.25em;text-transform:uppercase;color:var(--fg-2);margin-bottom:4px">Nível atual</div>
+        <div style="font-size:20px;color:var(--accent);font-weight:600">Iniciante</div>
+        <div style="font-size:10px;color:var(--fg-1);margin-top:2px">Próximo: Operador · 0/100 XP</div>
+      </div>
+      <div style="background:var(--bg-2);border:1px solid var(--line);padding:12px;border-radius:2px">
+        <div style="font-size:9px;letter-spacing:0.25em;text-transform:uppercase;color:var(--fg-2);margin-bottom:4px">XP Total</div>
+        <div style="font-size:20px;color:var(--accent);font-weight:600">0</div>
+      </div>
+      <div style="background:var(--bg-2);border:1px solid var(--line);padding:12px;border-radius:2px">
+        <div style="font-size:9px;letter-spacing:0.25em;text-transform:uppercase;color:var(--fg-2);margin-bottom:4px">Dossiês lidos</div>
+        <div style="font-size:20px;color:var(--accent);font-weight:600">0 / 20</div>
+      </div>
+      <div style="background:var(--bg-2);border:1px solid var(--line);padding:12px;border-radius:2px">
+        <div style="font-size:9px;letter-spacing:0.25em;text-transform:uppercase;color:var(--fg-2);margin-bottom:4px">Sequência</div>
+        <div style="font-size:20px;color:var(--accent);font-weight:600">0 🔥</div>
+      </div>
+      <div style="background:var(--bg-2);border:1px solid var(--line);padding:12px;border-radius:2px">
+        <div style="font-size:9px;letter-spacing:0.25em;text-transform:uppercase;color:var(--fg-2);margin-bottom:4px">Conquistas</div>
+        <div style="font-size:20px;color:var(--accent);font-weight:600">0 / 10</div>
+      </div>
+    </div>
+
+    <div style="background:var(--bg-1);border:1px solid var(--line);border-left:3px solid var(--amber);padding:14px;margin-top:14px;border-radius:2px">
+      <h4 style="font-size:11px;letter-spacing:0.2em;text-transform:uppercase;color:var(--amber);margin-bottom:4px"> Desafio da semana</h4>
+      <p id="challenge-text" style="font-size:12px;color:var(--fg-1)">Carregando...</p>
+      <button style="margin-top:8px;background:transparent;color:var(--accent);border:1px solid rgba(124,255,107,0.35);padding:7px 12px;font-family:var(--mono);font-size:10px;letter-spacing:0.2em;text-transform:uppercase;cursor:pointer;border-radius:2px" type="button">Marcar como concluído (+50 XP)</button>
+    </div>
+  </section>
+
+</main>
+
+<footer>
+  <span><b>KEST0</b> · arquivo em construção · projeto estudantil</span>
+  <span>Sem trackers · Sem cookies de terceiros · Sem Google · vigilância não recíproca</span>
+</footer>
+
+<script>
+(function(){
+  'use strict';
+  var KEY='kest0.progress.v1';
+  var state;
+  try{var raw=localStorage.getItem(KEY);state=raw?JSON.parse(raw):{xp:0,read:[],checklist:[],streak:0,lastVisit:null};}catch(e){state={xp:0,read:[],checklist:[],streak:0,lastVisit:null};}
+  function save(){try{localStorage.setItem(KEY,JSON.stringify(state));}catch(e){}}
+  var today=new Date().toDateString();
+  if(state.lastVisit!==today){var y=new Date();y.setDate(y.getDate()-1);state.streak=(state.lastVisit===y.toDateString())?state.streak+1:1;state.lastVisit=today;save();}
+  var challenges=['Ative 2FA no seu e-mail principal.','Substitua seu navegador por um focado em privacidade.','Revise permissões de microfone e câmera no celular.','Instale bloqueador de rastreadores DNS (NextDNS/Pi-hole).','Troque seu mecanismo de busca por uma alternativa privada.','Faça backup criptografado dos documentos sensíveis.','Audite apps conectados à sua conta Google/Microsoft.'];
+  var week=Math.floor(Date.now()/(7*24*60*60*1000));
+  var el=document.getElementById('challenge-text');
+  if(el)el.textContent=challenges[week%challenges.length];
+  var links=document.querySelectorAll('nav.primary a');
+  links.forEach(function(a){a.addEventListener('click',function(){links.forEach(function(x){x.classList.remove('active')});a.classList.add('active');});});
+})();
+</script>
+
+</body>
+</html>
