@@ -3,575 +3,2364 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<meta name="description" content="KEST0 — Dossiês técnicos de privacidade, OPSEC e vigilância digital.">
-<meta http-equiv="Content-Security-Policy" content="default-src 'self'; style-src 'self' 'unsafe-inline'; script-src 'self' 'unsafe-inline'; img-src 'self' data:; font-src 'self'; connect-src 'self'; frame-ancestors 'none'; base-uri 'self'; form-action 'self';">
-<meta name="referrer" content="no-referrer">
+<meta name="description" content="KEST0 — arquivo técnico de privacidade e cibersegurança.">
 <title>KEST0 — Dossiês de Privacidade</title>
 <style>
-  :root{
-    --bg-0:#05070A;
-    --bg-1:#0B0F14;
-    --bg-2:#121820;
-    --line:#1A2230;
-    --fg-0:#C9F7A8;
-    --fg-1:#8FBF7A;
-    --fg-2:#5A6B55;
-    --accent:#7CFF6B;
-    --amber:#FFB000;
-    --red:#FF5C5C;
-    --cyan:#4FD1E8;
-    --cyan-dim:rgba(79,209,232,0.25);
-    --mono:"JetBrains Mono","Fira Code","IBM Plex Mono","Cascadia Mono","Consolas","Courier New",monospace;
-  }
-  *{box-sizing:border-box;margin:0;padding:0}
-  html,body{background:var(--bg-0);color:var(--fg-0);font-family:var(--mono);font-size:14px;line-height:1.65;-webkit-font-smoothing:antialiased}
-  body{min-height:100vh;position:relative}
-  body::before{content:"";position:fixed;inset:0;pointer-events:none;z-index:9999;background:repeating-linear-gradient(to bottom,rgba(255,255,255,0.012) 0 1px,transparent 1px 3px);mix-blend-mode:overlay}
-  body::after{content:"";position:fixed;inset:0;pointer-events:none;z-index:9998;background:radial-gradient(ellipse at center,transparent 60%,rgba(0,0,0,0.6) 100%)}
-  a{color:var(--cyan);text-decoration:none;border-bottom:1px dashed rgba(79,209,232,0.35)}
-  a:hover{color:var(--accent);border-bottom-color:var(--accent)}
+    :root {
+        --bg: #0a0c0f;
+        --bg-alt: #12151a;
+        --bg-card: #161a21;
+        --border: #2a313c;
+        --border-accent: #3a4555;
+        --text: #d8dee9;
+        --text-dim: #8a95a5;
+        --text-muted: #5c6773;
+        --accent: #7ec8c8;
+        --accent-alt: #a3be8c;
+        --warn: #ebcb8b;
+        --danger: #bf616a;
+        --purple: #b48ead;
+        --mono: 'SF Mono', 'Cascadia Code', 'Consolas', 'Monaco', monospace;
+    }
 
-  /* HEADER */
-  header.site{max-width:1100px;margin:0 auto;padding:40px 24px 20px;display:flex;justify-content:space-between;align-items:flex-end;flex-wrap:wrap;gap:16px;border-bottom:1px solid var(--line)}
-  .brand{display:flex;align-items:center;gap:12px}
-  .brand-mark{width:34px;height:34px;border:1px solid var(--accent);display:grid;place-items:center;color:var(--accent);font-weight:700;font-size:16px;box-shadow:0 0 0 1px rgba(124,255,107,0.12),0 0 14px rgba(124,255,107,0.12) inset}
-  .brand h1{font-size:22px;letter-spacing:0.3em;font-weight:600;color:var(--accent)}
-  .brand h1::after{content:"▌";margin-left:4px;color:var(--accent);animation:blink 1s step-end infinite}
-  @keyframes blink{50%{opacity:0}}
-  .brand-sub{font-size:11px;color:var(--fg-2);letter-spacing:0.15em;text-transform:uppercase;margin-top:4px}
-  .brand-sub b{color:var(--fg-1);font-weight:500}
+    * { margin: 0; padding: 0; box-sizing: border-box; }
 
-  /* NAV */
-  nav.primary{max-width:1100px;margin:0 auto;padding:14px 24px;display:flex;flex-wrap:wrap;gap:6px;border-bottom:1px solid var(--line)}
-  nav.primary a{border:none;padding:7px 13px;font-size:11px;letter-spacing:0.18em;text-transform:uppercase;color:var(--fg-1);background:transparent;border:1px solid transparent;border-radius:2px;transition:all 0.15s ease}
-  nav.primary a:hover{color:var(--accent);border-color:var(--line);background:var(--bg-1)}
-  nav.primary a.active{color:var(--accent);border-color:rgba(124,255,107,0.35);background:var(--bg-1)}
+    html { scroll-behavior: smooth; }
 
-  /* MAIN */
-  main{max-width:1100px;margin:0 auto;padding:32px 24px 80px}
-  section{margin-bottom:56px}
-  .crumb{font-size:10px;color:var(--fg-2);letter-spacing:0.2em;text-transform:uppercase;margin-bottom:12px}
-  .crumb a{color:var(--fg-2);border:none}
-  .crumb a:hover{color:var(--accent)}
-  h2.section-title{font-size:13px;letter-spacing:0.3em;text-transform:uppercase;color:var(--accent);margin-bottom:4px;font-weight:600}
-  h2.section-title::before{content:"▮ ";color:var(--fg-2)}
-  .section-sub{color:var(--fg-1);font-size:12px;margin-bottom:22px;max-width:720px}
+    body {
+        background: var(--bg);
+        color: var(--text);
+        font-family: var(--mono);
+        font-size: 14px;
+        line-height: 1.6;
+        min-height: 100vh;
+        overflow-x: hidden;
+    }
 
-  /* DOSSIERS LIST */
-  .group{background:var(--bg-1);border:1px solid var(--line);padding:18px 20px;border-radius:2px;margin-bottom:14px}
-  .group-head{display:flex;justify-content:space-between;align-items:baseline;border-bottom:1px dashed var(--line);padding-bottom:8px;margin-bottom:12px}
-  .group-head h3{font-size:11px;letter-spacing:0.25em;text-transform:uppercase;color:var(--accent);font-weight:600}
-  .group-head small{font-size:10px;color:var(--fg-2);letter-spacing:0.1em}
-  .dossier-list{list-style:none;display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:6px}
-  .dossier-list li a{display:flex;justify-content:space-between;align-items:center;gap:10px;padding:8px 10px;border:1px solid transparent;border-radius:2px;color:var(--fg-0);font-size:12px;border-bottom:none;transition:all 0.15s ease}
-  .dossier-list li a:hover{background:var(--bg-2);border-color:var(--line);color:var(--accent)}
-  .dossier-list .meta{font-size:9px;color:var(--fg-2);letter-spacing:0.15em;text-transform:uppercase;white-space:nowrap}
-  .badge{display:inline-block;font-size:8px;letter-spacing:0.2em;text-transform:uppercase;padding:1px 5px;border-radius:2px;margin-left:6px;vertical-align:middle}
-  .badge.new{background:rgba(255,184,0,0.12);color:var(--amber);border:1px solid rgba(255,184,0,0.35)}
-  .badge.interactive{background:rgba(79,209,232,0.08);color:var(--cyan);border:1px solid rgba(79,209,232,0.3)}
+    /* ===== SPLASH SCREEN ===== */
+    #splash {
+        position: fixed;
+        inset: 0;
+        background: #000;
+        z-index: 9999;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        transition: opacity 0.8s ease, visibility 0.8s ease;
+    }
 
-  /* ATLAS GLOBAL */
-  .atlas-intro{background:var(--bg-1);border:1px solid var(--line);border-left:3px solid var(--cyan);padding:18px;margin-bottom:18px;border-radius:2px}
-  .atlas-intro h3{font-size:12px;letter-spacing:0.25em;text-transform:uppercase;color:var(--cyan);margin-bottom:6px}
-  .atlas-intro p{font-size:12px;color:var(--fg-1)}
-  .map-wrap{background:var(--bg-1);border:1px solid var(--line);border-radius:2px;padding:16px;margin-bottom:18px}
-  .map-head{display:flex;justify-content:space-between;align-items:center;margin-bottom:10px;font-size:10px;letter-spacing:0.2em;text-transform:uppercase;color:var(--fg-2)}
-  .map-head b{color:var(--cyan);font-weight:600}
-  .map-stage{position:relative;width:100%;aspect-ratio:2/1;background:#020407;border:1px solid var(--line);border-radius:2px;overflow:hidden}
-  .map-stage svg{width:100%;height:100%;display:block}
-  /* Grid sutil */
-  .map-grid line{stroke:rgba(79,209,232,0.06);stroke-width:0.25}
-  .map-grid text{fill:rgba(79,209,232,0.18);font-family:var(--mono);font-size:3px;letter-spacing:0.1em}
-  /* Continentes - estilo Países U: contornos ciano finos, sem preenchimento */
-  .continent{fill:none;stroke:var(--cyan);stroke-width:0.55;stroke-linejoin:round;stroke-linecap:round;opacity:0.85}
-  .continent:hover{stroke:var(--accent);stroke-width:0.8;opacity:1;cursor:pointer}
-  .country{fill:none;stroke:rgba(79,209,232,0.35);stroke-width:0.35;stroke-linejoin:round}
-  .country:hover{stroke:var(--accent);stroke-width:0.6;fill:rgba(124,255,107,0.04);cursor:pointer}
-  /* Nós de vigilância */
-  .node-core{fill:var(--red)}
-  .node-ring{fill:none;stroke:var(--red);stroke-width:0.35;opacity:0.6}
-  .node-pulse{fill:none;stroke:var(--red);stroke-width:0.35;opacity:0;transform-origin:center;animation:sonar 2.6s ease-out infinite}
-  .node-pulse.d2{animation-delay:0.9s}
-  .node-pulse.d3{animation-delay:1.8s}
-  @keyframes sonar{0%{r:1.5;opacity:0.8}100%{r:10;opacity:0}}
-  .node-label{fill:var(--fg-1);font-family:var(--mono);font-size:2.8px;letter-spacing:0.08em}
-  .node-label.t{fill:var(--accent);font-weight:600}
-  .legend{display:flex;flex-wrap:wrap;gap:14px;margin-top:10px;font-size:10px;color:var(--fg-2);letter-spacing:0.1em;text-transform:uppercase}
-  .legend span{display:inline-flex;align-items:center;gap:6px}
-  .legend i{width:8px;height:2px;display:inline-block}
-  .legend .l-cont{background:var(--cyan)}
-  .legend .l-country{background:rgba(79,209,232,0.4)}
-  .legend .l-node{background:var(--red);height:8px;width:8px;border-radius:50%;box-shadow:0 0 5px var(--red)}
+    #splash.hide {
+        opacity: 0;
+        visibility: hidden;
+    }
 
-  /* Info cards do Atlas */
-  .atlas-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:12px;margin-top:14px}
-  .atlas-card{background:var(--bg-1);border:1px solid var(--line);border-radius:2px;padding:14px;transition:all 0.15s ease}
-  .atlas-card:hover{border-color:var(--cyan-dim);background:var(--bg-2)}
-  .atlas-card h4{font-size:11px;letter-spacing:0.2em;text-transform:uppercase;color:var(--cyan);margin-bottom:8px;font-weight:600}
-  .atlas-card h4 .flag{margin-right:6px;font-size:13px}
-  .atlas-card .law{font-size:11px;color:var(--fg-0);margin-bottom:6px;padding-bottom:6px;border-bottom:1px dashed var(--line)}
-  .atlas-card .law b{color:var(--accent)}
-  .atlas-card .community{font-size:11px;color:var(--fg-1);margin-bottom:4px}
-  .atlas-card .community::before{content:"◈ ";color:var(--cyan)}
-  .atlas-card .oss{font-size:11px;color:var(--fg-2)}
-  .atlas-card .oss::before{content:"⚙ ";color:var(--amber)}
+    .splash-logo {
+        font-size: 48px;
+        font-weight: bold;
+        color: var(--accent);
+        letter-spacing: 8px;
+        margin-bottom: 24px;
+        opacity: 0;
+        animation: fadeIn 0.6s ease forwards 0.3s;
+    }
 
-  /* FOOTER */
-  footer{max-width:1100px;margin:40px auto 0;padding:16px 24px;border-top:1px solid var(--line);color:var(--fg-2);font-size:10px;letter-spacing:0.15em;text-transform:uppercase;display:flex;flex-wrap:wrap;justify-content:space-between;gap:10px}
-  footer b{color:var(--accent);font-weight:600}
+    .splash-terminal {
+        font-size: 13px;
+        color: var(--text-dim);
+        letter-spacing: 1px;
+        text-align: left;
+        min-width: 320px;
+    }
 
-  @media (max-width:640px){
-    .brand h1{font-size:18px;letter-spacing:0.25em}
-    header.site{padding:28px 18px 16px}
-    main{padding:24px 18px 60px}
-    nav.primary{padding:10px 18px}
-    .map-stage{aspect-ratio:16/10}
-  }
+    .splash-line {
+        opacity: 0;
+        margin: 4px 0;
+        white-space: nowrap;
+        overflow: hidden;
+    }
+
+    .splash-line .ok { color: var(--accent-alt); }
+    .splash-line .warn { color: var(--warn); }
+    .splash-line .accent { color: var(--accent); }
+
+    .splash-bar {
+        margin-top: 24px;
+        width: 320px;
+        height: 2px;
+        background: var(--border);
+        position: relative;
+        overflow: hidden;
+        opacity: 0;
+        animation: fadeIn 0.4s ease forwards 1.8s;
+    }
+
+    .splash-bar::after {
+        content: '';
+        position: absolute;
+        inset: 0;
+        background: var(--accent);
+        width: 0;
+        animation: loadBar 1.2s ease forwards 2.2s;
+    }
+
+    @keyframes fadeIn {
+        to { opacity: 1; }
+    }
+
+    @keyframes loadBar {
+        to { width: 100%; }
+    }
+
+    @keyframes typeLine {
+        from { opacity: 0; transform: translateX(-4px); }
+        to { opacity: 1; transform: translateX(0); }
+    }
+
+    .splash-line.show {
+        animation: typeLine 0.3s ease forwards;
+    }
+
+    /* ===== HEADER ===== */
+    header {
+        border-bottom: 1px solid var(--border);
+        background: var(--bg-alt);
+        position: sticky;
+        top: 0;
+        z-index: 100;
+    }
+
+    .header-top {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        padding: 14px 24px;
+        border-bottom: 1px solid var(--border);
+        flex-wrap: wrap;
+        gap: 12px;
+    }
+
+    .brand {
+        display: flex;
+        align-items: center;
+        gap: 14px;
+        cursor: pointer;
+    }
+
+    .brand-mark {
+        width: 34px;
+        height: 34px;
+        border: 1px solid var(--accent);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-weight: bold;
+        color: var(--accent);
+        font-size: 16px;
+    }
+
+    .brand-text h1 {
+        font-size: 14px;
+        letter-spacing: 2px;
+        color: var(--text);
+    }
+
+    .brand-text small {
+        font-size: 11px;
+        color: var(--text-muted);
+        letter-spacing: 0.5px;
+    }
+
+    .status-bar {
+        display: flex;
+        gap: 18px;
+        font-size: 11px;
+        color: var(--text-dim);
+        letter-spacing: 1px;
+    }
+
+    .status-bar span::before {
+        content: "●";
+        color: var(--accent-alt);
+        margin-right: 6px;
+        animation: pulse 2s infinite;
+    }
+
+    @keyframes pulse {
+        0%, 100% { opacity: 1; }
+        50% { opacity: 0.4; }
+    }
+
+    nav {
+        display: flex;
+        flex-wrap: wrap;
+        padding: 0 24px;
+        gap: 0;
+    }
+
+    nav a {
+        color: var(--text-dim);
+        text-decoration: none;
+        padding: 12px 16px;
+        font-size: 12px;
+        letter-spacing: 1px;
+        text-transform: uppercase;
+        border-bottom: 2px solid transparent;
+        transition: all 0.2s;
+        cursor: pointer;
+    }
+
+    nav a:hover, nav a.active {
+        color: var(--accent);
+        border-bottom-color: var(--accent);
+        background: var(--bg);
+    }
+
+    /* ===== MAIN ===== */
+    main {
+        max-width: 1200px;
+        margin: 0 auto;
+        padding: 40px 24px;
+    }
+
+    .view { display: none; }
+    .view.active { display: block; animation: viewFade 0.3s ease; }
+
+    @keyframes viewFade {
+        from { opacity: 0; transform: translateY(8px); }
+        to { opacity: 1; transform: translateY(0); }
+    }
+
+    section {
+        margin-bottom: 60px;
+        scroll-margin-top: 140px;
+    }
+
+    .section-path {
+        color: var(--text-muted);
+        font-size: 11px;
+        letter-spacing: 1px;
+        margin-bottom: 8px;
+    }
+
+    .section-path a {
+        color: var(--text-muted);
+        text-decoration: none;
+        cursor: pointer;
+    }
+
+    .section-path a:hover { color: var(--accent); }
+
+    h2 {
+        font-size: 22px;
+        letter-spacing: 2px;
+        color: var(--text);
+        margin-bottom: 8px;
+        text-transform: uppercase;
+    }
+
+    h3 {
+        font-size: 14px;
+        letter-spacing: 1.5px;
+        color: var(--accent);
+        margin-bottom: 16px;
+        text-transform: uppercase;
+    }
+
+    .section-desc {
+        color: var(--text-dim);
+        font-size: 13px;
+        margin-bottom: 28px;
+        max-width: 720px;
+    }
+
+    /* ===== DOSSIÊS (HOME) ===== */
+    .dossie-group { margin-bottom: 32px; }
+
+    .dossie-group-title {
+        font-size: 11px;
+        color: var(--text-muted);
+        letter-spacing: 2px;
+        text-transform: uppercase;
+        padding-bottom: 8px;
+        border-bottom: 1px dashed var(--border);
+        margin-bottom: 16px;
+    }
+
+    .dossie-group-subtitle {
+        color: var(--text-dim);
+        font-size: 12px;
+        margin-bottom: 12px;
+        font-style: italic;
+    }
+
+    .dossie-list {
+        display: flex;
+        flex-direction: column;
+        gap: 6px;
+    }
+
+    .dossie-item {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding: 10px 14px;
+        background: var(--bg-card);
+        border: 1px solid var(--border);
+        border-left: 3px solid var(--accent);
+        text-decoration: none;
+        color: var(--text);
+        transition: all 0.15s;
+        font-size: 13px;
+        cursor: pointer;
+    }
+
+    .dossie-item:hover {
+        border-left-color: var(--accent-alt);
+        background: var(--bg-alt);
+        transform: translateX(2px);
+    }
+
+    .dossie-item .meta {
+        color: var(--text-muted);
+        font-size: 11px;
+        letter-spacing: 1px;
+        white-space: nowrap;
+    }
+
+    .badge {
+        display: inline-block;
+        padding: 2px 6px;
+        font-size: 10px;
+        background: var(--accent);
+        color: var(--bg);
+        letter-spacing: 1px;
+        margin-left: 8px;
+    }
+
+    .btn-open-dossies {
+        display: inline-block;
+        margin-top: 20px;
+        padding: 12px 24px;
+        background: transparent;
+        border: 1px solid var(--accent);
+        color: var(--accent);
+        font-family: var(--mono);
+        font-size: 12px;
+        letter-spacing: 2px;
+        text-transform: uppercase;
+        cursor: pointer;
+        transition: all 0.2s;
+    }
+
+    .btn-open-dossies:hover {
+        background: var(--accent);
+        color: var(--bg);
+    }
+
+    /* ===== DOSSIÊ INDIVIDUAL ===== */
+    .dossie-header {
+        background: var(--bg-card);
+        border: 1px solid var(--border);
+        border-left: 3px solid var(--accent);
+        padding: 24px;
+        margin-bottom: 24px;
+    }
+
+    .dossie-number {
+        font-size: 11px;
+        color: var(--text-muted);
+        letter-spacing: 2px;
+        margin-bottom: 8px;
+    }
+
+    .dossie-title {
+        font-size: 24px;
+        color: var(--text);
+        letter-spacing: 1px;
+        margin-bottom: 12px;
+        line-height: 1.3;
+    }
+
+    .dossie-meta {
+        display: flex;
+        gap: 16px;
+        font-size: 11px;
+        color: var(--text-dim);
+        letter-spacing: 1px;
+    }
+
+    .dossie-content {
+        background: var(--bg-card);
+        border: 1px solid var(--border);
+        padding: 32px;
+        line-height: 1.8;
+        font-size: 14px;
+        color: var(--text);
+    }
+
+    .dossie-content p {
+        margin-bottom: 16px;
+    }
+
+    .dossie-content h4 {
+        color: var(--accent);
+        font-size: 14px;
+        letter-spacing: 1.5px;
+        margin: 24px 0 12px 0;
+        text-transform: uppercase;
+    }
+
+    .dossie-content ul {
+        margin: 12px 0 16px 24px;
+    }
+
+    .dossie-content li {
+        margin-bottom: 6px;
+        color: var(--text-dim);
+    }
+
+    .dossie-content strong { color: var(--accent-alt); }
+    .dossie-content em { color: var(--warn); font-style: normal; }
+
+    .dossie-nav {
+        display: flex;
+        justify-content: space-between;
+        gap: 12px;
+        margin-top: 24px;
+    }
+
+    .dossie-nav button {
+        flex: 1;
+        padding: 12px;
+        background: var(--bg-card);
+        border: 1px solid var(--border);
+        color: var(--text-dim);
+        font-family: var(--mono);
+        font-size: 12px;
+        letter-spacing: 1px;
+        cursor: pointer;
+        transition: all 0.2s;
+    }
+
+    .dossie-nav button:hover:not(:disabled) {
+        border-color: var(--accent);
+        color: var(--accent);
+    }
+
+    .dossie-nav button:disabled {
+        opacity: 0.3;
+        cursor: not-allowed;
+    }
+
+    .btn-mark-read {
+        display: block;
+        width: 100%;
+        margin-top: 16px;
+        padding: 14px;
+        background: var(--accent);
+        color: var(--bg);
+        border: none;
+        font-family: var(--mono);
+        font-size: 12px;
+        letter-spacing: 2px;
+        text-transform: uppercase;
+        font-weight: bold;
+        cursor: pointer;
+        transition: all 0.2s;
+    }
+
+    .btn-mark-read:hover { background: var(--accent-alt); }
+    .btn-mark-read.done { background: var(--text-muted); cursor: default; }
+
+    /* ===== MATRIZ GLOBAL ===== */
+    .matrix-intro {
+        background: var(--bg-card);
+        border: 1px solid var(--border);
+        border-left: 3px solid var(--accent);
+        padding: 16px 20px;
+        margin-bottom: 28px;
+        font-size: 12px;
+        color: var(--text-dim);
+    }
+
+    .matrix-intro strong { color: var(--accent); }
+
+    .matrix-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(340px, 1fr));
+        gap: 20px;
+    }
+
+    .vector-card {
+        background: var(--bg-card);
+        border: 1px solid var(--border);
+        padding: 0;
+        display: flex;
+        flex-direction: column;
+        transition: all 0.2s;
+        cursor: pointer;
+    }
+
+    .vector-card:hover {
+        border-color: var(--accent);
+        transform: translateY(-2px);
+    }
+
+    .vector-header {
+        padding: 16px 20px;
+        border-bottom: 1px solid var(--border);
+        background: var(--bg-alt);
+    }
+
+    .vector-id {
+        font-size: 10px;
+        color: var(--text-muted);
+        letter-spacing: 2px;
+        margin-bottom: 4px;
+    }
+
+    .vector-title {
+        font-size: 15px;
+        color: var(--accent);
+        letter-spacing: 1px;
+        font-weight: bold;
+    }
+
+    .vector-body {
+        padding: 20px;
+        display: flex;
+        flex-direction: column;
+        gap: 14px;
+        font-size: 12px;
+    }
+
+    .vector-row {
+        display: flex;
+        flex-direction: column;
+        gap: 4px;
+    }
+
+    .vector-label {
+        font-size: 10px;
+        color: var(--text-muted);
+        letter-spacing: 1.5px;
+        text-transform: uppercase;
+    }
+
+    .vector-value { color: var(--text); line-height: 1.5; }
+
+    .matrix-footer {
+        margin-top: 28px;
+        padding: 14px 20px;
+        background: var(--bg-alt);
+        border: 1px solid var(--border);
+        font-size: 11px;
+        color: var(--text-muted);
+        letter-spacing: 1px;
+        line-height: 1.8;
+    }
+
+    /* ===== MATRIZ DETALHADA ===== */
+    .matrix-tabs {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 8px;
+        margin-bottom: 24px;
+    }
+
+    .matrix-tab {
+        padding: 10px 18px;
+        background: var(--bg-card);
+        border: 1px solid var(--border);
+        color: var(--text-dim);
+        font-family: var(--mono);
+        font-size: 11px;
+        letter-spacing: 1.5px;
+        text-transform: uppercase;
+        cursor: pointer;
+        transition: all 0.2s;
+    }
+
+    .matrix-tab:hover { border-color: var(--text-dim); }
+
+    .matrix-tab.active[data-cat="all"] { background: var(--accent); color: var(--bg); border-color: var(--accent); }
+    .matrix-tab.active[data-cat="lei"] { background: var(--accent); color: var(--bg); border-color: var(--accent); }
+    .matrix-tab.active[data-cat="comunidade"] { background: var(--accent-alt); color: var(--bg); border-color: var(--accent-alt); }
+    .matrix-tab.active[data-cat="projeto"] { background: var(--warn); color: var(--bg); border-color: var(--warn); }
+    .matrix-tab.active[data-cat="perfil"] { background: var(--danger); color: var(--bg); border-color: var(--danger); }
+
+    .matrix-detail-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+        gap: 16px;
+    }
+
+    .detail-card {
+        background: var(--bg-card);
+        border: 1px solid var(--border);
+        padding: 20px;
+        transition: all 0.2s;
+        position: relative;
+        overflow: hidden;
+    }
+
+    .detail-card::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 3px;
+        height: 100%;
+        background: var(--accent);
+    }
+
+    .detail-card[data-cat="lei"]::before { background: var(--accent); }
+    .detail-card[data-cat="comunidade"]::before { background: var(--accent-alt); }
+    .detail-card[data-cat="projeto"]::before { background: var(--warn); }
+    .detail-card[data-cat="perfil"]::before { background: var(--danger); }
+
+    .detail-card:hover {
+        border-color: var(--border-accent);
+        transform: translateY(-2px);
+    }
+
+    .detail-card .country {
+        font-size: 10px;
+        color: var(--text-muted);
+        letter-spacing: 2px;
+        margin-bottom: 4px;
+    }
+
+    .detail-card .cat-tag {
+        display: inline-block;
+        padding: 2px 8px;
+        font-size: 9px;
+        letter-spacing: 1.5px;
+        text-transform: uppercase;
+        margin-bottom: 10px;
+    }
+
+    .detail-card[data-cat="lei"] .cat-tag { background: rgba(126,200,200,0.15); color: var(--accent); }
+    .detail-card[data-cat="comunidade"] .cat-tag { background: rgba(163,190,140,0.15); color: var(--accent-alt); }
+    .detail-card[data-cat="projeto"] .cat-tag { background: rgba(235,203,139,0.15); color: var(--warn); }
+    .detail-card[data-cat="perfil"] .cat-tag { background: rgba(191,97,106,0.15); color: var(--danger); }
+
+    .detail-card .title {
+        font-size: 14px;
+        color: var(--text);
+        margin-bottom: 8px;
+        line-height: 1.4;
+    }
+
+    .detail-card .desc {
+        font-size: 12px;
+        color: var(--text-dim);
+        line-height: 1.6;
+    }
+
+    .matrix-legend {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 16px;
+        margin-top: 24px;
+        padding: 16px;
+        background: var(--bg-alt);
+        border: 1px solid var(--border);
+        font-size: 11px;
+    }
+
+    .legend-item {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        color: var(--text-dim);
+    }
+
+    .legend-dot {
+        width: 10px;
+        height: 10px;
+    }
+
+    .legend-dot.lei { background: var(--accent); }
+    .legend-dot.comunidade { background: var(--accent-alt); }
+    .legend-dot.projeto { background: var(--warn); }
+    .legend-dot.perfil { background: var(--danger); }
+
+    /* ===== VÍDEOS / TUTORIAIS ===== */
+    .placeholder-box {
+        background: var(--bg-card);
+        border: 1px dashed var(--border-accent);
+        padding: 40px 24px;
+        text-align: center;
+        color: var(--text-dim);
+    }
+
+    .placeholder-box .icon {
+        font-size: 28px;
+        color: var(--text-muted);
+        margin-bottom: 12px;
+    }
+
+    .placeholder-box p {
+        font-size: 12px;
+        letter-spacing: 1px;
+    }
+
+    /* ===== COMUNIDADE ===== */
+    .discord-card {
+        background: var(--bg-card);
+        border: 1px solid var(--border);
+        padding: 24px;
+    }
+
+    .discord-card p {
+        color: var(--text-dim);
+        margin-bottom: 20px;
+        font-size: 13px;
+    }
+
+    .channels {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 8px;
+        margin-bottom: 20px;
+    }
+
+    .channel-tag {
+        padding: 6px 12px;
+        background: var(--bg-alt);
+        border: 1px solid var(--border);
+        color: var(--accent);
+        font-size: 12px;
+        letter-spacing: 0.5px;
+    }
+
+    .btn {
+        display: inline-block;
+        padding: 12px 20px;
+        background: var(--accent);
+        color: var(--bg);
+        text-decoration: none;
+        font-family: var(--mono);
+        font-size: 12px;
+        letter-spacing: 2px;
+        text-transform: uppercase;
+        font-weight: bold;
+        border: 1px solid var(--accent);
+        transition: all 0.2s;
+        cursor: pointer;
+    }
+
+    .btn:hover {
+        background: transparent;
+        color: var(--accent);
+    }
+
+    /* ===== PAINEL DO USUÁRIO ===== */
+    .panel-hero {
+        background: linear-gradient(135deg, var(--bg-card) 0%, var(--bg-alt) 100%);
+        border: 1px solid var(--border);
+        border-left: 3px solid var(--accent);
+        padding: 32px;
+        margin-bottom: 24px;
+        position: relative;
+        overflow: hidden;
+    }
+
+    .panel-hero::after {
+        content: '';
+        position: absolute;
+        top: -50%;
+        right: -10%;
+        width: 300px;
+        height: 300px;
+        background: radial-gradient(circle, rgba(126,200,200,0.08) 0%, transparent 70%);
+        pointer-events: none;
+    }
+
+    .panel-hero-top {
+        display: flex;
+        justify-content: space-between;
+        align-items: flex-start;
+        flex-wrap: wrap;
+        gap: 16px;
+        margin-bottom: 24px;
+    }
+
+    .panel-user-info h3 {
+        font-size: 20px;
+        color: var(--text);
+        letter-spacing: 2px;
+        margin-bottom: 4px;
+    }
+
+    .panel-user-info .level-tag {
+        display: inline-block;
+        padding: 4px 12px;
+        background: var(--accent);
+        color: var(--bg);
+        font-size: 10px;
+        letter-spacing: 2px;
+        text-transform: uppercase;
+        font-weight: bold;
+    }
+
+    .panel-xp-display {
+        text-align: right;
+    }
+
+    .panel-xp-display .xp-number {
+        font-size: 36px;
+        color: var(--accent);
+        letter-spacing: 2px;
+        font-weight: bold;
+    }
+
+    .panel-xp-display .xp-label {
+        font-size: 10px;
+        color: var(--text-muted);
+        letter-spacing: 2px;
+        text-transform: uppercase;
+    }
+
+    .progress-bar-wrap {
+        margin-top: 16px;
+    }
+
+    .progress-label {
+        display: flex;
+        justify-content: space-between;
+        font-size: 11px;
+        color: var(--text-dim);
+        letter-spacing: 1px;
+        margin-bottom: 6px;
+    }
+
+    .progress-bar {
+        height: 8px;
+        background: var(--bg);
+        border: 1px solid var(--border);
+        overflow: hidden;
+        position: relative;
+    }
+
+    .progress-fill {
+        height: 100%;
+        background: linear-gradient(90deg, var(--accent) 0%, var(--accent-alt) 100%);
+        width: 0;
+        transition: width 1s cubic-bezier(0.4, 0, 0.2, 1);
+        position: relative;
+    }
+
+    .progress-fill::after {
+        content: '';
+        position: absolute;
+        inset: 0;
+        background: linear-gradient(90deg, transparent, rgba(255,255,255,0.3), transparent);
+        animation: shimmer 2s infinite;
+    }
+
+    @keyframes shimmer {
+        0% { transform: translateX(-100%); }
+        100% { transform: translateX(100%); }
+    }
+
+    .panel-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+        gap: 12px;
+        margin-bottom: 24px;
+    }
+
+    .stat-card {
+        background: var(--bg-card);
+        border: 1px solid var(--border);
+        padding: 20px;
+        transition: all 0.2s;
+        cursor: default;
+    }
+
+    .stat-card:hover {
+        border-color: var(--accent);
+        transform: translateY(-2px);
+    }
+
+    .stat-label {
+        font-size: 10px;
+        color: var(--text-muted);
+        letter-spacing: 1.5px;
+        text-transform: uppercase;
+        margin-bottom: 8px;
+    }
+
+    .stat-value {
+        font-size: 24px;
+        color: var(--accent);
+        letter-spacing: 1px;
+        font-weight: bold;
+    }
+
+    .stat-sub {
+        font-size: 10px;
+        color: var(--text-dim);
+        margin-top: 4px;
+        letter-spacing: 1px;
+    }
+
+    .challenge-box {
+        background: var(--bg-card);
+        border: 1px solid var(--border);
+        border-left: 3px solid var(--warn);
+        padding: 24px;
+    }
+
+    .challenge-box h4 {
+        font-size: 12px;
+        color: var(--warn);
+        letter-spacing: 1.5px;
+        margin-bottom: 12px;
+        text-transform: uppercase;
+    }
+
+    .challenge-box p {
+        color: var(--text-dim);
+        margin-bottom: 16px;
+        font-size: 13px;
+        line-height: 1.6;
+    }
+
+    .achievements-section {
+        margin-top: 24px;
+    }
+
+    .achievements-section h4 {
+        font-size: 12px;
+        color: var(--text-dim);
+        letter-spacing: 1.5px;
+        margin-bottom: 12px;
+        text-transform: uppercase;
+    }
+
+    .achievements-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+        gap: 10px;
+    }
+
+    .achievement {
+        background: var(--bg-card);
+        border: 1px solid var(--border);
+        padding: 14px;
+        text-align: center;
+        opacity: 0.4;
+        transition: all 0.3s;
+    }
+
+    .achievement.unlocked {
+        opacity: 1;
+        border-color: var(--accent-alt);
+    }
+
+    .achievement .ach-icon {
+        font-size: 20px;
+        margin-bottom: 6px;
+    }
+
+    .achievement .ach-name {
+        font-size: 10px;
+        color: var(--text-dim);
+        letter-spacing: 1px;
+    }
+
+    .achievement.unlocked .ach-name {
+        color: var(--accent-alt);
+    }
+
+    .toast {
+        position: fixed;
+        bottom: 24px;
+        right: 24px;
+        background: var(--accent-alt);
+        color: var(--bg);
+        padding: 14px 20px;
+        font-size: 12px;
+        letter-spacing: 1px;
+        font-weight: bold;
+        z-index: 1000;
+        transform: translateX(400px);
+        transition: transform 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+        box-shadow: 0 4px 20px rgba(0,0,0,0.4);
+    }
+
+    .toast.show { transform: translateX(0); }
+
+    /* ===== FOOTER ===== */
+    footer {
+        border-top: 1px solid var(--border);
+        background: var(--bg-alt);
+        padding: 24px;
+        text-align: center;
+        color: var(--text-muted);
+        font-size: 11px;
+        letter-spacing: 1px;
+        line-height: 1.8;
+    }
+
+    /* ===== RESPONSIVO ===== */
+    @media (max-width: 640px) {
+        .header-top { padding: 12px 16px; }
+        nav { padding: 0 8px; }
+        nav a { padding: 10px 10px; font-size: 11px; }
+        main { padding: 24px 16px; }
+        h2 { font-size: 18px; }
+        .matrix-grid, .matrix-detail-grid { grid-template-columns: 1fr; }
+        .status-bar { font-size: 10px; gap: 10px; }
+        .dossie-title { font-size: 18px; }
+        .dossie-content { padding: 20px; }
+        .panel-xp-display .xp-number { font-size: 28px; }
+        .splash-logo { font-size: 32px; letter-spacing: 4px; }
+        .splash-terminal { min-width: 260px; font-size: 11px; }
+    }
 </style>
 </head>
 <body>
 
-<header class="site" id="home">
-  <div>
-    <div class="brand">
-      <div class="brand-mark">K</div>
-      <h1>KEST0</h1>
+<!-- SPLASH SCREEN -->
+<div id="splash">
+    <div class="splash-logo">K E S T 0</div>
+    <div class="splash-terminal">
+        <div class="splash-line" data-delay="600">> inicializando sistema de arquivos...</div>
+        <div class="splash-line" data-delay="1000">> verificando integridade dos dossiês <span class="ok">[OK]</span></div>
+        <div class="splash-line" data-delay="1400">> carregando matriz geopolítica <span class="ok">[OK]</span></div>
+        <div class="splash-line" data-delay="1800">> conectando ao painel local <span class="warn">[LOCAL]</span></div>
+        <div class="splash-line" data-delay="2200">> <span class="accent">zero trackers</span> · zero cookies · zero google</div>
     </div>
-    <div class="brand-sub"><b>kesto</b> · substantivo, esperanto · caixa — arquivo técnico de privacidade</div>
-  </div>
-  <div style="font-size:10px;color:var(--fg-2);letter-spacing:0.15em;text-transform:uppercase;text-align:right">
-    <span style="color:var(--red);display:inline-block;width:6px;height:6px;border-radius:50%;background:var(--red);box-shadow:0 0 6px var(--red);margin-right:6px;vertical-align:middle;animation:pulse 1.6s ease-in-out infinite"></span>AO VIVO<br>
-    <span style="color:var(--fg-1)">20 arquivos · Zero trackers</span>
-  </div>
-</header>
+    <div class="splash-bar"></div>
+</div>
 
-<nav class="primary" aria-label="Navegação principal">
-  <a href="#home" class="active">Início</a>
-  <a href="#ala-dossies">Dossiês</a>
-  <a href="#atlas">Atlas Global</a>
-  <a href="#ala-videos">Vídeos</a>
-  <a href="#ala-tutoriais">Tutoriais</a>
-  <a href="#ala-comunidade">Comunidade</a>
-  <a href="#painel">◆ Painel</a>
-</nav>
+<header>
+    <div class="header-top">
+        <div class="brand" onclick="showView('home')">
+            <div class="brand-mark">K</div>
+            <div class="brand-text">
+                <h1>KEST0</h1>
+                <small>kesto · esperanto · caixa — arquivo técnico de privacidade</small>
+            </div>
+        </div>
+        <div class="status-bar">
+            <span>AO VIVO</span>
+            <span>20 ARQUIVOS</span>
+            <span>ZERO TRACKERS</span>
+        </div>
+    </div>
+    <nav>
+        <a onclick="showView('home')" data-view="home">Início</a>
+        <a onclick="showView('dossies')" data-view="dossies">Dossiês</a>
+        <a onclick="showView('matriz')" data-view="matriz">Matriz Global</a>
+        <a onclick="showView('videos')" data-view="videos">Vídeos</a>
+        <a onclick="showView('tutoriais')" data-view="tutoriais">Tutoriais</a>
+        <a onclick="showView('comunidade')" data-view="comunidade">Comunidade</a>
+        <a onclick="showView('painel')" data-view="painel">◆ Painel</a>
+    </nav>
+</header>
 
 <main>
 
-  <!-- DOSSIÊS -->
-  <section id="ala-dossies">
-    <div class="crumb"><a href="#home">Início</a> / Dossiês</div>
-    <h2 class="section-title">Dossiês</h2>
-    <p class="section-sub">20 arquivos organizados por tema. Ao concluir a leitura, você ganha XP e desbloqueia conquistas no <a href="#painel">Painel</a>.</p>
+    <!-- HOME -->
+    <div id="view-home" class="view active">
+        <section>
+            <div class="section-path">Início</div>
+            <h2>Arquivo Técnico de Privacidade</h2>
+            <p class="section-desc">Bem-vindo ao KEST0. Um projeto estudantil independente dedicado a documentar, analisar e disseminar conhecimento sobre vigilância digital, privacidade e cibersegurança. Todo o conteúdo é gratuito, sem rastreamento e construído para ser útil.</p>
 
-    <div class="group">
-      <div class="group-head"><h3>Grupo 01 · Fundamentos</h3><small>Quem vigia, por que vigia</small></div>
-      <ul class="dossier-list">
-        <li><a href="#"><span>01 · Alguém que não é seu amigo sabe bastante sobre você</span><span class="meta">4 min</span></a></li>
-        <li><a href="#"><span>02 · Altruísmo empresarial não existe</span><span class="meta">5 min</span></a></li>
-        <li><a href="#"><span>03 · O Arsenal Alternativo: Ferramentas</span><span class="meta">10 min</span></a></li>
-        <li><a href="#"><span>04 · O que é OPSEC?</span><span class="meta">5 min</span></a></li>
-        <li><a href="#"><span>05 · Anonimato não é crime</span><span class="meta">7 min</span></a></li>
-        <li><a href="#"><span>06 · TOR: muito além do estigma</span><span class="meta">6 min <span class="badge new">Novo</span></span></a></li>
-      </ul>
+            <div class="dossie-group">
+                <div class="dossie-group-title">Comece por aqui</div>
+                <div class="dossie-list">
+                    <a class="dossie-item" onclick="openDossie(0)"><span>01 · Alguém que não é seu amigo sabe bastante sobre você</span><span class="meta">4 min</span></a>
+                    <a class="dossie-item" onclick="openDossie(3)"><span>04 · O que é OPSEC?</span><span class="meta">5 min</span></a>
+                    <a class="dossie-item" onclick="openDossie(6)"><span>07 · Qual seu nível de vigilância?</span><span class="meta">INTERATIVO</span></a>
+                </div>
+            </div>
+
+            <button class="btn-open-dossies" onclick="showView('dossies')">→ Abrir todos os 20 dossiês</button>
+            <button class="btn-open-dossies" onclick="showView('matriz')" style="margin-left:8px">→ Explorar Matriz Global</button>
+        </section>
     </div>
 
-    <div class="group">
-      <div class="group-head"><h3>Grupo 02 · Ferramentas Práticas</h3><small>Quiz, checklist, calculadora</small></div>
-      <ul class="dossier-list">
-        <li><a href="#"><span>07 · Qual seu nível de vigilância?</span><span class="meta"><span class="badge interactive">Interativo</span></span></a></li>
-        <li><a href="#"><span>08 · Checklist de OPSEC pessoal</span><span class="meta"><span class="badge interactive">Interativo</span></span></a></li>
-        <li><a href="#"><span>09 · Quanto de você vira dado?</span><span class="meta"><span class="badge interactive">Interativo</span></span></a></li>
-        <li><a href="#"><span>10 · Glossário</span><span class="meta">Referência</span></a></li>
-      </ul>
+    <!-- DOSSIÊS (LISTA) -->
+    <div id="view-dossies" class="view">
+        <section>
+            <div class="section-path"><a onclick="showView('home')">Início</a> / Dossiês</div>
+            <h2>Dossiês</h2>
+            <p class="section-desc">20 arquivos organizados por tema. Ao concluir a leitura, você ganha XP e desbloqueia conquistas no <a onclick="showView('painel')" style="color:var(--accent);cursor:pointer">Painel do Usuário</a>.</p>
+
+            <div class="dossie-group">
+                <div class="dossie-group-title">Grupo 01 · Fundamentos</div>
+                <div class="dossie-group-subtitle">Quem vigia, por que vigia</div>
+                <div class="dossie-list" id="group-1"></div>
+            </div>
+
+            <div class="dossie-group">
+                <div class="dossie-group-title">Grupo 02 · Ferramentas Práticas</div>
+                <div class="dossie-group-subtitle">Quiz, checklist, calculadora</div>
+                <div class="dossie-list" id="group-2"></div>
+            </div>
+
+            <div class="dossie-group">
+                <div class="dossie-group-title">Grupo 03 · Brasil, Lei e Casos Reais</div>
+                <div class="dossie-group-subtitle">LGPD, vazamentos, golpes</div>
+                <div class="dossie-list" id="group-3"></div>
+            </div>
+
+            <div class="dossie-group">
+                <div class="dossie-group-title">Grupo 04 · Aprofundamento</div>
+                <div class="dossie-group-subtitle">Celular, tríade, IA local</div>
+                <div class="dossie-list" id="group-4"></div>
+            </div>
+        </section>
     </div>
 
-    <div class="group">
-      <div class="group-head"><h3>Grupo 03 · Brasil, Lei e Casos Reais</h3><small>LGPD, vazamentos, golpes</small></div>
-      <ul class="dossier-list">
-        <li><a href="#"><span>11 · A LGPD e seus direitos</span><span class="meta">8 min</span></a></li>
-        <li><a href="#"><span>12 · Casos reais</span><span class="meta">7 min</span></a></li>
-        <li><a href="#atlas"><span>13 · O mapa da vigilância</span><span class="meta"><span class="badge interactive">Atlas</span></span></a></li>
-        <li><a href="#"><span>14 · Golpes com nome e sobrenome</span><span class="meta">5 min</span></a></li>
-        <li><a href="#"><span>15 · Vigiado pelo app, exposto pelo vazamento</span><span class="meta">6 min</span></a></li>
-      </ul>
+    <!-- DOSSIÊ INDIVIDUAL -->
+    <div id="view-dossie" class="view">
+        <section>
+            <div class="section-path"><a onclick="showView('home')">Início</a> / <a onclick="showView('dossies')">Dossiês</a> / <span id="dossie-path-title"></span></div>
+            <div class="dossie-header">
+                <div class="dossie-number" id="dossie-number"></div>
+                <h2 class="dossie-title" id="dossie-title"></h2>
+                <div class="dossie-meta">
+                    <span id="dossie-time"></span>
+                    <span>·</span>
+                    <span id="dossie-group"></span>
+                </div>
+            </div>
+            <div class="dossie-content" id="dossie-content"></div>
+            <button class="btn-mark-read" id="btn-mark-read" onclick="markAsRead()">✓ Marcar como lido (+25 XP)</button>
+            <div class="dossie-nav">
+                <button id="btn-prev" onclick="navDossie(-1)">← Anterior</button>
+                <button onclick="showView('dossies')">Todos os dossiês</button>
+                <button id="btn-next" onclick="navDossie(1)">Próximo →</button>
+            </div>
+        </section>
     </div>
 
-    <div class="group">
-      <div class="group-head"><h3>Grupo 04 · Aprofundamento</h3><small>Celular, tríade, IA local</small></div>
-      <ul class="dossier-list">
-        <li><a href="#"><span>16 · O seu celular é um espião de bolso</span><span class="meta">6 min</span></a></li>
-        <li><a href="#"><span>17 · A tríade da sobrevivência digital</span><span class="meta">7 min</span></a></li>
-        <li><a href="#"><span>18 · IAs locais: privacidade no seu próprio hardware</span><span class="meta">7 min <span class="badge new">Novo</span></span></a></li>
-        <li><a href="#"><span>19 · Navegadores e mecanismos de busca sob a lupa</span><span class="meta">6 min</span></a></li>
-        <li><a href="#"><span>20 · Bastidores e fontes</span><span class="meta">4 min</span></a></li>
-      </ul>
-    </div>
-  </section>
+    <!-- MATRIZ GLOBAL -->
+    <div id="view-matriz" class="view">
+        <section>
+            <div class="section-path"><a onclick="showView('home')">Início</a> / Matriz Global</div>
+            <h2>Matriz Global</h2>
+            <p class="section-desc">Uma classificação taxonômica das jurisdições, redes de vigilância e ecossistemas de código aberto. Clique em um vetor para explorar detalhes de leis, comunidades e projetos.</p>
 
-  <!-- ATLAS GLOBAL -->
-  <section id="atlas">
-    <div class="crumb"><a href="#home">Início</a> / Atlas Global</div>
-    <h2 class="section-title">Atlas Global</h2>
-    <p class="section-sub">Um mapa vivo das leis de privacidade, comunidades e iniciativas de código aberto ao redor do mundo. Clique em um país para explorar.</p>
+            <div class="matrix-intro">
+                <strong>▸ METODOLOGIA DE CLASSIFICAÇÃO</strong><br>
+                Os dados são agrupados por vetores de ameaça e proteção: <strong>Redes de Interceptação (SIGINT)</strong>, <strong>Marcos Regulatórios</strong> e <strong>Ecossistemas de Resistência</strong>.
+            </div>
 
-    <div class="atlas-intro">
-      <h3>▸ Como usar este mapa</h3>
-      <p>Passe o cursor sobre os contornos dos países para destacá-los. Os pontos vermelhos indicam agências de inteligência com capacidade de interceptação em massa documentada. Abaixo do mapa, você encontrará fichas técnicas por região com leis, comunidades locais e projetos open-source relevantes.</p>
-    </div>
+            <div class="matrix-grid" id="matrix-grid"></div>
 
-    <div class="map-wrap">
-      <div class="map-head">
-        <span>Mapa Mundi · <b>Atlas Global</b></span>
-        <span>SVG · contornos vetoriais · interativo</span>
-      </div>
-      <div class="map-stage" role="img" aria-label="Mapa mundi com contornos em ciano sobre fundo preto">
-        <svg viewBox="0 0 400 200" preserveAspectRatio="xMidYMid meet" xmlns="http://www.w3.org/2000/svg">
-          <defs>
-            <radialGradient id="nodeGlow" cx="50%" cy="50%" r="50%">
-              <stop offset="0%" stop-color="#FF5C5C" stop-opacity="0.9"/>
-              <stop offset="100%" stop-color="#FF5C5C" stop-opacity="0"/>
-            </radialGradient>
-          </defs>
+            <button class="btn-open-dossies" onclick="showMatrixDetail()" style="margin-top:24px">→ Explorar detalhes completos (leis, comunidades, projetos)</button>
 
-          <!-- Grade de fundo -->
-          <g class="map-grid">
-            <line x1="0" y1="50" x2="400" y2="50"/>
-            <line x1="0" y1="100" x2="400" y2="100"/>
-            <line x1="0" y1="150" x2="400" y2="150"/>
-            <line x1="100" y1="0" x2="100" y2="200"/>
-            <line x1="200" y1="0" x2="200" y2="200"/>
-            <line x1="300" y1="0" x2="300" y2="200"/>
-            <text x="4" y="48">60°N</text>
-            <text x="4" y="98">0°</text>
-            <text x="4" y="148">60°S</text>
-            <text x="98" y="8">60°W</text>
-            <text x="198" y="8">0°</text>
-            <text x="298" y="8">60°E</text>
-          </g>
-
-          <!-- Continentes - contornos limpos estilo Países U -->
-          <g>
-            <!-- América do Norte -->
-            <path class="continent" d="M55,42 L75,38 L100,36 L118,40 L125,50 L122,60 L115,70 L108,78 L98,85 L88,90 L78,88 L68,80 L60,70 L55,58 Z"/>
-            <!-- América Central -->
-            <path class="continent" d="M88,90 L95,92 L100,98 L98,105 L92,108 L86,102 Z"/>
-            <!-- América do Sul -->
-            <path class="continent" d="M100,110 L115,108 L128,112 L135,125 L132,140 L128,155 L120,170 L112,178 L105,172 L100,158 L98,140 L96,125 Z"/>
-            <!-- Europa -->
-            <path class="continent" d="M178,48 L188,44 L200,42 L212,44 L220,48 L222,56 L218,64 L210,70 L200,72 L190,70 L182,64 L178,56 Z"/>
-            <!-- África -->
-            <path class="continent" d="M188,78 L200,74 L215,74 L228,78 L235,90 L238,105 L235,120 L228,135 L218,148 L208,155 L198,152 L190,142 L186,125 L184,105 L186,90 Z"/>
-            <!-- Ásia -->
-            <path class="continent" d="M222,44 L240,40 L260,38 L280,38 L300,40 L318,44 L330,52 L335,62 L332,75 L325,85 L315,92 L300,96 L285,98 L270,96 L255,92 L240,85 L228,75 L222,62 Z"/>
-            <!-- Índia -->
-            <path class="continent" d="M270,96 L280,98 L285,110 L282,125 L275,132 L268,125 L265,110 Z"/>
-            <!-- Sudeste Asiático -->
-            <path class="continent" d="M300,96 L310,98 L315,108 L312,118 L305,122 L298,118 L295,108 Z"/>
-            <!-- Oceania / Austrália -->
-            <path class="continent" d="M315,135 L330,132 L348,132 L358,140 L355,152 L345,160 L330,162 L318,158 L312,148 Z"/>
-            <!-- Nova Zelândia -->
-            <path class="continent" d="M355,162 L360,160 L362,168 L358,175 L354,170 Z"/>
-            <!-- Groenlândia -->
-            <path class="continent" d="M130,28 L145,24 L155,28 L152,38 L142,42 L132,38 Z"/>
-            <!-- Japão -->
-            <path class="continent" d="M332,62 L336,68 L334,78 L330,74 Z"/>
-            <!-- Reino Unido -->
-            <path class="continent" d="M178,48 L182,44 L184,50 L182,56 L178,54 Z"/>
-            <!-- Madagascar -->
-            <path class="continent" d="M232,130 L236,128 L238,138 L234,142 L230,138 Z"/>
-          </g>
-
-          <!-- Divisões internas sutis (países) -->
-          <g>
-            <!-- Brasil -->
-            <path class="country" d="M105,118 L118,115 L125,125 L122,140 L115,155 L108,152 L102,138 Z"/>
-            <!-- EUA -->
-            <path class="country" d="M62,48 L80,44 L98,46 L105,54 L102,64 L92,68 L78,66 L65,60 Z"/>
-            <!-- Canadá -->
-            <path class="country" d="M60,38 L80,34 L100,36 L115,40 L118,48 L105,48 L85,46 L65,44 Z"/>
-            <!-- Rússia -->
-            <path class="country" d="M240,38 L270,36 L300,38 L320,42 L325,52 L310,54 L280,52 L250,50 Z"/>
-            <!-- China -->
-            <path class="country" d="M285,58 L310,56 L325,62 L322,75 L310,80 L295,78 L285,70 Z"/>
-            <!-- Índia -->
-            <path class="country" d="M270,96 L280,98 L285,110 L282,125 L275,132 L268,125 L265,110 Z"/>
-            <!-- Austrália -->
-            <path class="country" d="M315,135 L330,132 L348,132 L358,140 L355,152 L345,160 L330,162 L318,158 L312,148 Z"/>
-            <!-- Alemanha -->
-            <path class="country" d="M200,52 L208,50 L210,58 L206,64 L200,62 Z"/>
-            <!-- França -->
-            <path class="country" d="M188,56 L196,54 L198,62 L194,68 L188,64 Z"/>
-            <!-- África do Sul -->
-            <path class="country" d="M208,142 L218,140 L222,148 L218,155 L210,152 Z"/>
-            <!-- Argentina -->
-            <path class="country" d="M108,155 L115,158 L118,170 L112,178 L105,172 Z"/>
-          </g>
-
-          <!-- Nós de vigilância -->
-          <g>
-            <g transform="translate(82,56)">
-              <circle class="node-pulse" r="1.5"/><circle class="node-pulse d2" r="1.5"/><circle class="node-pulse d3" r="1.5"/>
-              <circle class="node-ring" r="3"/><circle class="node-core" r="1.2"/>
-              <text class="node-label t" x="4" y="-2">NSA · EUA</text>
-            </g>
-            <g transform="translate(181,50)">
-              <circle class="node-pulse" r="1.5"/><circle class="node-pulse d2" r="1.5"/>
-              <circle class="node-ring" r="3"/><circle class="node-core" r="1.2"/>
-              <text class="node-label t" x="4" y="-2">GCHQ · UK</text>
-            </g>
-            <g transform="translate(138,32)">
-              <circle class="node-pulse" r="1.5"/>
-              <circle class="node-ring" r="2.5"/><circle class="node-core" r="1"/>
-              <text class="node-label" x="4" y="-2">CSE · CA</text>
-            </g>
-            <g transform="translate(350,148)">
-              <circle class="node-pulse" r="1.5"/><circle class="node-pulse d2" r="1.5"/>
-              <circle class="node-ring" r="3"/><circle class="node-core" r="1.2"/>
-              <text class="node-label t" x="-30" y="-3">ASD · AU</text>
-            </g>
-            <g transform="translate(358,168)">
-              <circle class="node-pulse" r="1.5"/>
-              <circle class="node-ring" r="2.5"/><circle class="node-core" r="1"/>
-              <text class="node-label" x="-22" y="4">GCSB · NZ</text>
-            </g>
-            <g transform="translate(204,58)">
-              <circle class="node-pulse" r="1.5"/>
-              <circle class="node-ring" r="2.5"/><circle class="node-core" r="1"/>
-              <text class="node-label" x="4" y="2">BND · DE</text>
-            </g>
-            <g transform="translate(290,48)">
-              <circle class="node-pulse" r="1.5"/><circle class="node-pulse d2" r="1.5"/>
-              <circle class="node-ring" r="3"/><circle class="node-core" r="1.2"/>
-              <text class="node-label t" x="4" y="-2">FSB · RU</text>
-            </g>
-            <g transform="translate(305,72)">
-              <circle class="node-pulse" r="1.5"/>
-              <circle class="node-ring" r="3"/><circle class="node-core" r="1.2"/>
-              <text class="node-label t" x="4" y="2">MSS · CN</text>
-            </g>
-            <g transform="translate(115,138)">
-              <circle class="node-pulse" r="1.5"/>
-              <circle class="node-ring" r="2.5"/><circle class="node-core" r="1.1"/>
-              <text class="node-label t" x="4" y="-2">ABIN · BR</text>
-            </g>
-            <g transform="translate(192,62)">
-              <circle class="node-pulse" r="1.5"/>
-              <circle class="node-ring" r="2.5"/><circle class="node-core" r="1"/>
-              <text class="node-label" x="-22" y="4">DGSE · FR</text>
-            </g>
-            <g transform="translate(277,118)">
-              <circle class="node-pulse" r="1.5"/>
-              <circle class="node-ring" r="2.5"/><circle class="node-core" r="1"/>
-              <text class="node-label" x="4" y="2">RAW · IN</text>
-            </g>
-            <g transform="translate(215,148)">
-              <circle class="node-pulse" r="1.5"/>
-              <circle class="node-ring" r="2.5"/><circle class="node-core" r="1"/>
-              <text class="node-label" x="4" y="2">NIA · ZA</text>
-            </g>
-          </g>
-
-          <text x="10" y="195" fill="rgba(79,209,232,0.4)" font-family="monospace" font-size="2.8" letter-spacing="0.1em">
-            FONTES: SNOWDEN 2013 · WIKILEAKS · ACCESS NOW · EFF · REL. PÚBLICOS
-          </text>
-        </svg>
-      </div>
-      <div class="legend">
-        <span><i class="l-cont"></i> Contorno continental</span>
-        <span><i class="l-country"></i> Divisão interna (país)</span>
-        <span><i class="l-node"></i> Agência SIGINT documentada</span>
-        <span>Render: SVG inline · zero requisições externas</span>
-      </div>
+            <div class="matrix-footer">
+                FONTES: SNOWDEN 2013 · WIKILEAKS · ACCESS NOW · EFF · REL. PÚBLICOS<br>
+                RENDER: CSS GRID · ZERO REQUISIÇÕES EXTERNAS · LAYOUT RESPONSIVO
+            </div>
+        </section>
     </div>
 
-    <!-- Fichas técnicas por região -->
-    <div class="atlas-grid">
+    <!-- MATRIZ DETALHADA -->
+    <div id="view-matriz-detail" class="view">
+        <section>
+            <div class="section-path"><a onclick="showView('home')">Início</a> / <a onclick="showView('matriz')">Matriz Global</a> / Detalhes</div>
+            <h2>Detalhes da Matriz</h2>
+            <p class="section-desc">Filtre por categoria para explorar leis, comunidades de advocacy, projetos open-source e perfis de vigilância em cada jurisdição.</p>
 
-      <div class="atlas-card">
-        <h4><span class="flag">🇺🇸</span>Estados Unidos</h4>
-        <div class="law"><b>Lei:</b> Privacy Act (1974), CCPA (Califórnia), BIPA (Illinois). Sem lei federal abrangente.</div>
-        <div class="community">Electronic Frontier Foundation (EFF)</div>
-        <div class="community">Access Now · Washington DC</div>
-        <div class="oss">Signal Foundation · Tor Project · Mozilla</div>
-      </div>
+            <div class="matrix-tabs">
+                <button class="matrix-tab active" data-cat="all" onclick="filterMatrix('all')">Todos</button>
+                <button class="matrix-tab" data-cat="lei" onclick="filterMatrix('lei')">Leis & Regulamentos</button>
+                <button class="matrix-tab" data-cat="comunidade" onclick="filterMatrix('comunidade')">Comunidades</button>
+                <button class="matrix-tab" data-cat="projeto" onclick="filterMatrix('projeto')">Projetos Open-Source</button>
+                <button class="matrix-tab" data-cat="perfil" onclick="filterMatrix('perfil')">Perfil de Vigilância</button>
+            </div>
 
-      <div class="atlas-card">
-        <h4><span class="flag">🇪🇺</span>União Europeia</h4>
-        <div class="law"><b>Lei:</b> GDPR (Regulamento Geral de Proteção de Dados) — padrão ouro global desde 2018.</div>
-        <div class="community">EDRi (European Digital Rights Initiative)</div>
-        <div class="community">La Quadrature du Net (França)</div>
-        <div class="oss">Nextcloud · Proton · Tutanota · Matrix.org</div>
-      </div>
+            <div class="matrix-detail-grid" id="matrix-detail-grid"></div>
 
-      <div class="atlas-card">
-        <h4><span class="flag">🇧🇷</span>Brasil</h4>
-        <div class="law"><b>Lei:</b> LGPD (Lei 13.709/2018) — em vigor desde 2020. Autoridade: ANPD.</div>
-        <div class="community">Coding Rights · Internet Lab</div>
-        <div class="community">Comitê Gestor da Internet (CGI.br)</div>
-        <div class="oss">Serpro (gov) · TLSNotary BR · Criptografia sem Fronteiras</div>
-      </div>
-
-      <div class="atlas-card">
-        <h4><span class="flag">🇩🇪</span>Alemanha</h4>
-        <div class="law"><b>Lei:</b> BDSG (Bundesdatenschutzgesetz) + GDPR. Uma das culturas de privacidade mais fortes do mundo.</div>
-        <div class="community">Chaos Computer Club (CCC) — maior associação de hackers da Europa</div>
-        <div class="community">Digitale Gesellschaft</div>
-        <div class="oss">Nextcloud · GnuPG · KDE · FSFE</div>
-      </div>
-
-      <div class="atlas-card">
-        <h4><span class="flag">🇷</span>Rússia</h4>
-        <div class="law"><b>Lei:</b> Lei Yarovaya (2016) — obriga retenção de dados e acesso a chaves criptográficas. SORM-3 para interceptação.</div>
-        <div class="community">RoskomSvoboda (luta contra censura)</div>
-        <div class="community">OpenMedia (extinta, legado documentado)</div>
-        <div class="oss">Qubes OS (contribuições) · WireGuard (origem russa)</div>
-      </div>
-
-      <div class="atlas-card">
-        <h4><span class="flag">🇨🇳</span>China</h4>
-        <div class="law"><b>Lei:</b> PIPL (Personal Information Protection Law, 2021) — similar ao GDPR na forma, mas com exceções amplas para segurança nacional.</div>
-        <div class="community">GreatFire.org (monitoramento de censura)</div>
-        <div class="community">China Digital Times</div>
-        <div class="oss">Shadowsocks · V2Ray · Trojan (ferramentas de contorno)</div>
-      </div>
-
-      <div class="atlas-card">
-        <h4><span class="flag">🇮🇳</span>Índia</h4>
-        <div class="law"><b>Lei:</b> DPDP Act (2023) — Digital Personal Data Protection. Substitui o projeto de 2019 após decisão do Supremo sobre privacidade como direito fundamental.</div>
-        <div class="community">Internet Freedom Foundation (IFF)</div>
-        <div class="community">Software Freedom Law Centre of India</div>
-        <div class="oss">Signal (adoção massiva) · local-first apps</div>
-      </div>
-
-      <div class="atlas-card">
-        <h4><span class="flag">🇦🇺</span>Austrália / NZ</h4>
-        <div class="law"><b>Lei:</b> Privacy Act 1988 (AU) · Privacy Act 2020 (NZ). Membros do Five Eyes.</div>
-        <div class="community">Digital Rights Watch (AU)</div>
-        <div class="community">Tech Liberty NZ</div>
-        <div class="oss">Signal · Session (desenvolvido na Austrália)</div>
-      </div>
-
-      <div class="atlas-card">
-        <h4><span class="flag">🇿🇦</span>África do Sul</h4>
-        <div class="law"><b>Lei:</b> POPIA (Protection of Personal Information Act, 2020) — inspirada no GDPR.</div>
-        <div class="community">Right2Know Campaign</div>
-        <div class="community">Code for South Africa</div>
-        <div class="oss">OpenUp · Driftwood (ferramentas locais)</div>
-      </div>
-
-      <div class="atlas-card">
-        <h4><span class="flag">🇯🇵</span>Japão</h4>
-        <div class="law"><b>Lei:</b> APPI (Act on Protection of Personal Information) — reformada em 2022 com multas mais altas.</div>
-        <div class="community">Japan Internet Providers Association</div>
-        <div class="community">Human Rights Now</div>
-        <div class="oss">Sakura VPS (privacy-friendly hosting) · Line (E2EE)</div>
-      </div>
-
-    </div>
-  </section>
-
-  <!-- VÍDEOS -->
-  <section id="ala-videos">
-    <div class="crumb"><a href="#home">Início</a> / Vídeos</div>
-    <h2 class="section-title">Vídeos</h2>
-    <p class="section-sub">Conteúdo em vídeo produzido de forma independente, aprofundando os temas dos dossiês.</p>
-    <div style="background:var(--bg-1);border:1px solid var(--line);padding:18px;border-radius:2px;max-width:520px">
-      <span style="font-size:10px;color:var(--amber);letter-spacing:0.2em;text-transform:uppercase">◐ Em breve</span>
-      <h3 style="font-size:13px;letter-spacing:0.18em;text-transform:uppercase;color:var(--accent);margin:8px 0">▶ Em produção</h3>
-      <p style="font-size:12px;color:var(--fg-1)">Os primeiros vídeos estão sendo roteirizados. Sem anúncios, sem rastreamento de reprodução, sem player de terceiros.</p>
-    </div>
-  </section>
-
-  <!-- TUTORIAIS -->
-  <section id="ala-tutoriais">
-    <div class="crumb"><a href="#home">Início</a> / Tutoriais</div>
-    <h2 class="section-title">Tutoriais de Ferramentas</h2>
-    <p class="section-sub">Passo a passo ilustrado para instalar e configurar ferramentas de privacidade em sistemas desktop e mobile.</p>
-    <div style="background:var(--bg-1);border:1px solid var(--line);padding:18px;border-radius:2px;max-width:520px">
-      <span style="font-size:10px;color:var(--amber);letter-spacing:0.2em;text-transform:uppercase">◐ Em breve</span>
-      <h3 style="font-size:13px;letter-spacing:0.18em;text-transform:uppercase;color:var(--accent);margin:8px 0">⚙ Em produção</h3>
-      <p style="font-size:12px;color:var(--fg-1)">Cada tutorial cobrirá uma ferramenta específica, com passo a passo ilustrado e validado em múltiplos sistemas.</p>
-    </div>
-  </section>
-
-  <!-- COMUNIDADE -->
-  <section id="ala-comunidade">
-    <div class="crumb"><a href="#home">Início</a> / Comunidade</div>
-    <h2 class="section-title">Comunidade no Discord</h2>
-    <p class="section-sub">Construir um fórum próprio é custoso. O Discord foi escolhido por ser gratuito e acessível. Lá você tira dúvidas, relata golpes e recebe ajuda com configurações.</p>
-    <div style="background:var(--bg-1);border:1px solid var(--line);padding:18px;border-radius:2px;max-width:640px">
-      <span style="font-size:10px;color:var(--red);letter-spacing:0.2em;text-transform:uppercase"><span style="display:inline-block;width:6px;height:6px;border-radius:50%;background:var(--red);box-shadow:0 0 6px var(--red);margin-right:6px;vertical-align:middle;animation:pulse 1.6s ease-in-out infinite"></span>Ao vivo</span>
-      <h3 style="font-size:13px;letter-spacing:0.18em;text-transform:uppercase;color:var(--accent);margin:8px 0">Canais</h3>
-      <div style="display:flex;flex-wrap:wrap;gap:6px;margin:10px 0">
-        <code style="background:var(--bg-2);border:1px solid var(--line);padding:5px 9px;font-size:11px;color:var(--cyan);border-radius:2px">#dúvidas-gerais</code>
-        <code style="background:var(--bg-2);border:1px solid var(--line);padding:5px 9px;font-size:11px;color:var(--cyan);border-radius:2px">#configurações</code>
-        <code style="background:var(--bg-2);border:1px solid var(--line);padding:5px 9px;font-size:11px;color:var(--cyan);border-radius:2px">#golpes-e-alertas</code>
-        <code style="background:var(--bg-2);border:1px solid var(--line);padding:5px 9px;font-size:11px;color:var(--cyan);border-radius:2px">#sugestões</code>
-      </div>
-      <p><a href="https://discord.gg/hHM4nR77n" rel="nofollow noopener noreferrer" target="_blank">→ Entrar no Discord do KEST0</a></p>
-    </div>
-  </section>
-
-  <!-- PAINEL -->
-  <section id="painel">
-    <div class="crumb"><a href="#home">Início</a> / Painel</div>
-    <h2 class="section-title">Painel do Operador</h2>
-    <p class="section-sub">Seu progresso pessoal é salvo <b>localmente</b> no seu navegador (localStorage). Nenhum byte é enviado para servidores externos.</p>
-
-    <div style="background:var(--bg-1);border:1px solid var(--line);border-radius:2px;padding:20px;display:grid;grid-template-columns:repeat(auto-fit,minmax(160px,1fr));gap:12px">
-      <div style="background:var(--bg-2);border:1px solid var(--line);padding:12px;border-radius:2px">
-        <div style="font-size:9px;letter-spacing:0.25em;text-transform:uppercase;color:var(--fg-2);margin-bottom:4px">Nível atual</div>
-        <div style="font-size:20px;color:var(--accent);font-weight:600">Iniciante</div>
-        <div style="font-size:10px;color:var(--fg-1);margin-top:2px">Próximo: Operador · 0/100 XP</div>
-      </div>
-      <div style="background:var(--bg-2);border:1px solid var(--line);padding:12px;border-radius:2px">
-        <div style="font-size:9px;letter-spacing:0.25em;text-transform:uppercase;color:var(--fg-2);margin-bottom:4px">XP Total</div>
-        <div style="font-size:20px;color:var(--accent);font-weight:600">0</div>
-      </div>
-      <div style="background:var(--bg-2);border:1px solid var(--line);padding:12px;border-radius:2px">
-        <div style="font-size:9px;letter-spacing:0.25em;text-transform:uppercase;color:var(--fg-2);margin-bottom:4px">Dossiês lidos</div>
-        <div style="font-size:20px;color:var(--accent);font-weight:600">0 / 20</div>
-      </div>
-      <div style="background:var(--bg-2);border:1px solid var(--line);padding:12px;border-radius:2px">
-        <div style="font-size:9px;letter-spacing:0.25em;text-transform:uppercase;color:var(--fg-2);margin-bottom:4px">Sequência</div>
-        <div style="font-size:20px;color:var(--accent);font-weight:600">0 🔥</div>
-      </div>
-      <div style="background:var(--bg-2);border:1px solid var(--line);padding:12px;border-radius:2px">
-        <div style="font-size:9px;letter-spacing:0.25em;text-transform:uppercase;color:var(--fg-2);margin-bottom:4px">Conquistas</div>
-        <div style="font-size:20px;color:var(--accent);font-weight:600">0 / 10</div>
-      </div>
+            <div class="matrix-legend">
+                <div class="legend-item"><div class="legend-dot lei"></div> Leis & Regulamentos</div>
+                <div class="legend-item"><div class="legend-dot comunidade"></div> Comunidades & Advocacy</div>
+                <div class="legend-item"><div class="legend-dot projeto"></div> Projetos Open-Source</div>
+                <div class="legend-item"><div class="legend-dot perfil"></div> Perfil de Vigilância</div>
+            </div>
+        </section>
     </div>
 
-    <div style="background:var(--bg-1);border:1px solid var(--line);border-left:3px solid var(--amber);padding:14px;margin-top:14px;border-radius:2px">
-      <h4 style="font-size:11px;letter-spacing:0.2em;text-transform:uppercase;color:var(--amber);margin-bottom:4px"> Desafio da semana</h4>
-      <p id="challenge-text" style="font-size:12px;color:var(--fg-1)">Carregando...</p>
-      <button style="margin-top:8px;background:transparent;color:var(--accent);border:1px solid rgba(124,255,107,0.35);padding:7px 12px;font-family:var(--mono);font-size:10px;letter-spacing:0.2em;text-transform:uppercase;cursor:pointer;border-radius:2px" type="button">Marcar como concluído (+50 XP)</button>
+    <!-- VÍDEOS -->
+    <div id="view-videos" class="view">
+        <section>
+            <div class="section-path"><a onclick="showView('home')">Início</a> / Vídeos</div>
+            <h2>Vídeos</h2>
+            <p class="section-desc">Conteúdo em vídeo produzido de forma independente, aprofundando os temas dos dossiês.</p>
+            <div class="placeholder-box">
+                <div class="icon">◐</div>
+                <p>EM PRODUÇÃO</p>
+                <p style="margin-top:8px; color:var(--text-muted)">Os primeiros vídeos estão sendo roteirizados.<br>Sem anúncios · Sem rastreamento · Sem player de terceiros.</p>
+            </div>
+        </section>
     </div>
-  </section>
+
+    <!-- TUTORIAIS -->
+    <div id="view-tutoriais" class="view">
+        <section>
+            <div class="section-path"><a onclick="showView('home')">Início</a> / Tutoriais</div>
+            <h2>Tutoriais de Ferramentas</h2>
+            <p class="section-desc">Passo a passo ilustrado para instalar e configurar ferramentas de privacidade em sistemas desktop e mobile.</p>
+            <div class="placeholder-box">
+                <div class="icon">⚙</div>
+                <p>EM PRODUÇÃO</p>
+                <p style="margin-top:8px; color:var(--text-muted)">Cada tutorial cobrirá uma ferramenta específica, com passo a passo validado em múltiplos sistemas.</p>
+            </div>
+        </section>
+    </div>
+
+    <!-- COMUNIDADE -->
+    <div id="view-comunidade" class="view">
+        <section>
+            <div class="section-path"><a onclick="showView('home')">Início</a> / Comunidade</div>
+            <h2>Comunidade no Discord</h2>
+            <p class="section-desc">Construir um fórum próprio é custoso. O Discord foi escolhido por ser gratuito e acessível. Lá você tira dúvidas, relata golpes e recebe ajuda com configurações.</p>
+            <div class="discord-card">
+                <p><strong style="color:var(--accent-alt)">AO VIVO</strong> · Canais ativos</p>
+                <div class="channels">
+                    <span class="channel-tag">#dúvidas-gerais</span>
+                    <span class="channel-tag">#configurações</span>
+                    <span class="channel-tag">#golpes-e-alertas</span>
+                    <span class="channel-tag">#sugestões</span>
+                </div>
+                <a href="https://discord.gg/hHM4nR77n" class="btn" target="_blank" rel="noopener">→ Entrar no Discord do KEST0</a>
+            </div>
+        </section>
+    </div>
+
+    <!-- PAINEL DO USUÁRIO -->
+    <div id="view-painel" class="view">
+        <section>
+            <div class="section-path"><a onclick="showView('home')">Início</a> / Painel do Usuário</div>
+            <h2>Painel do Usuário</h2>
+            <p class="section-desc">Seu progresso pessoal é salvo localmente no seu navegador (localStorage). Nenhum byte é enviado para servidores externos.</p>
+
+            <div class="panel-hero">
+                <div class="panel-hero-top">
+                    <div class="panel-user-info">
+                        <h3 id="panel-level-name">INICIANTE</h3>
+                        <span class="level-tag" id="panel-level-tag">NÍVEL 01</span>
+                    </div>
+                    <div class="panel-xp-display">
+                        <div class="xp-number" id="panel-xp">0</div>
+                        <div class="xp-label">XP TOTAL</div>
+                    </div>
+                </div>
+                <div class="progress-bar-wrap">
+                    <div class="progress-label">
+                        <span id="progress-current">Iniciante</span>
+                        <span id="progress-next">Próximo: Operador · 0/200 XP</span>
+                    </div>
+                    <div class="progress-bar">
+                        <div class="progress-fill" id="progress-fill"></div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="panel-grid">
+                <div class="stat-card">
+                    <div class="stat-label">Dossiês Lidos</div>
+                    <div class="stat-value"><span id="stat-read">0</span> / 20</div>
+                    <div class="stat-sub" id="stat-read-sub">0% concluído</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-label">Sequência</div>
+                    <div class="stat-value"><span id="stat-streak">0</span> 🔥</div>
+                    <div class="stat-sub">dias consecutivos</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-label">Conquistas</div>
+                    <div class="stat-value"><span id="stat-ach">0</span> / 10</div>
+                    <div class="stat-sub" id="stat-ach-sub">desbloqueadas</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-label">Tempo Total</div>
+                    <div class="stat-value" id="stat-time">0 min</div>
+                    <div class="stat-sub">de leitura</div>
+                </div>
+            </div>
+
+            <div class="challenge-box">
+                <h4>▸ Desafio da Semana</h4>
+                <p id="challenge-text">Carregando desafio...</p>
+                <button class="btn" id="btn-challenge" onclick="completeChallenge()">Marcar como concluído (+50 XP)</button>
+            </div>
+
+            <div class="achievements-section">
+                <h4>▸ Conquistas</h4>
+                <div class="achievements-grid" id="achievements-grid"></div>
+            </div>
+        </section>
+    </div>
 
 </main>
 
 <footer>
-  <span><b>KEST0</b> · arquivo em construção · projeto estudantil</span>
-  <span>Sem trackers · Sem cookies de terceiros · Sem Google · vigilância não recíproca</span>
+    KEST0 · arquivo em construção · projeto estudantil<br>
+    Sem trackers · Sem cookies de terceiros · Sem Google · vigilância não recíproca
 </footer>
 
+<div class="toast" id="toast"></div>
+
 <script>
-(function(){
-  'use strict';
-  var KEY='kest0.progress.v1';
-  var state;
-  try{var raw=localStorage.getItem(KEY);state=raw?JSON.parse(raw):{xp:0,read:[],checklist:[],streak:0,lastVisit:null};}catch(e){state={xp:0,read:[],checklist:[],streak:0,lastVisit:null};}
-  function save(){try{localStorage.setItem(KEY,JSON.stringify(state));}catch(e){}}
-  var today=new Date().toDateString();
-  if(state.lastVisit!==today){var y=new Date();y.setDate(y.getDate()-1);state.streak=(state.lastVisit===y.toDateString())?state.streak+1:1;state.lastVisit=today;save();}
-  var challenges=['Ative 2FA no seu e-mail principal.','Substitua seu navegador por um focado em privacidade.','Revise permissões de microfone e câmera no celular.','Instale bloqueador de rastreadores DNS (NextDNS/Pi-hole).','Troque seu mecanismo de busca por uma alternativa privada.','Faça backup criptografado dos documentos sensíveis.','Audite apps conectados à sua conta Google/Microsoft.'];
-  var week=Math.floor(Date.now()/(7*24*60*60*1000));
-  var el=document.getElementById('challenge-text');
-  if(el)el.textContent=challenges[week%challenges.length];
-  var links=document.querySelectorAll('nav.primary a');
-  links.forEach(function(a){a.addEventListener('click',function(){links.forEach(function(x){x.classList.remove('active')});a.classList.add('active');});});
-})();
+    // ===== SPLASH SCREEN =====
+    (function() {
+        const lines = document.querySelectorAll('.splash-line');
+        lines.forEach(line => {
+            const delay = parseInt(line.dataset.delay);
+            setTimeout(() => line.classList.add('show'), delay);
+        });
+        setTimeout(() => {
+            document.getElementById('splash').classList.add('hide');
+        }, 3400);
+    })();
+
+    // ===== DOSSIÊS (CONTEÚDO) =====
+    const dossies = [
+        {
+            title: "Alguém que não é seu amigo sabe bastante sobre você",
+            time: "4 min de leitura",
+            group: "Grupo 01 · Fundamentos",
+            content: `
+                <p>Você provavelmente já ouviu a frase: <em>"se o produto é grátis, o produto é você"</em>. Mas essa explicação é superficial. A realidade é mais técnica e mais preocupante: você não é o produto, você é a <strong>matéria-prima</strong>. O produto é a previsão do seu comportamento futuro, vendida a anunciantes, empresas e, em alguns casos, governos.</p>
+                <h4>O modelo de negócio da atenção</h4>
+                <p>Empresas como Google, Meta e TikTok operam um modelo chamado <strong>capitalismo de vigilância</strong> (termo cunhado por Shoshana Zuboff). Cada clique, pausa de rolagem, localização, busca e até a velocidade com que você digita é coletado, agregado e transformado em perfil comportamental.</p>
+                <h4>O que eles sabem sobre você</h4>
+                <ul>
+                    <li><strong>Padrões de sono</strong> — pelo horário que você abre o app</li>
+                    <li><strong>Estado emocional</strong> — pela velocidade de digitação e tipo de conteúdo consumido</li>
+                    <li><strong>Relacionamentos</strong> — por quem você mensagem e com qual frequência</li>
+                    <li><strong>Intenções de compra</strong> — dias ou semanas antes de você mesmo saber</li>
+                    <li><strong>Filiação política</strong> — inferida por likes, grupos e padrões de compartilhamento</li>
+                </ul>
+                <h4>Por que isso importa</h4>
+                <p>Esses dados não são usados apenas para vender tênis. Eles são usados para moldar comportamento em escala: influenciar eleições, manipular mercados financeiros, e, em regimes autoritários, identificar dissidentes antes mesmo de eles se organizarem. Privacidade não é sobre esconder coisas — é sobre <strong>autonomia</strong>.</p>
+            `
+        },
+        {
+            title: "Altruísmo empresarial não existe",
+            time: "5 min de leitura",
+            group: "Grupo 01 · Fundamentos",
+            content: `
+                <p>Quando uma empresa diz que "respeita sua privacidade" ou que "seus dados estão seguros", ela está fazendo uma declaração de marketing, não uma promessa ética. Empresas são estruturas legais projetadas para maximizar retorno aos acionistas. Qualquer decisão "altruísta" que reduza lucro é, em última análise, insustentável dentro do modelo corporativo atual.</p>
+                <h4>O caso do Signal</h4>
+                <p>O Signal é frequentemente citado como exceção — uma fundação sem fins lucrativos. Mas mesmo ele precisa de dinheiro para operar servidores. A diferença é que o Signal é <strong>transparente sobre suas fontes de financiamento</strong> (doações) e seu código é aberto, permitindo auditoria. Isso não é altruísmo; é um modelo de negócio diferente, alinhado com seus valores declarados.</p>
+                <h4>Red flags de "privacidade" corporativa</h4>
+                <ul>
+                    <li>Empresa que diz "seus dados estão seguros" sem explicar <strong>como</strong></li>
+                    <li>Política de privacidade com mais de 20 páginas</li>
+                    <li>Serviço "grátis" sem modelo de receita claro</li>
+                    <li>Código fechado (proprietário) — você precisa confiar na palavra deles</li>
+                    <li>Sede em jurisdição com leis fracas de proteção de dados</li>
+                </ul>
+                <h4>A regra prática</h4>
+                <p>Se você não consegue explicar em uma frase <strong>como a empresa ganha dinheiro</strong>, desconfie. Se o código não é aberto, você está confiando. Se a empresa pode mudar a política amanhã, você não tem controle. Privacidade real exige <strong>arquitetura</strong>, não promessas.</p>
+            `
+        },
+        {
+            title: "O Arsenal Alternativo: Ferramentas",
+            time: "10 min de leitura",
+            group: "Grupo 01 · Fundamentos",
+            content: `
+                <p>Privacidade não é um estado — é um <strong>processo contínuo</strong>. Não existe ferramenta mágica que resolva tudo, mas existe um ecossistema robusto de software livre que permite construir uma postura defensiva coerente. Esta seção apresenta as categorias fundamentais.</p>
+                <h4>Navegadores</h4>
+                <p>O navegador é a superfície de ataque mais comum. Alternativas recomendadas:</p>
+                <ul>
+                    <li><strong>Firefox</strong> — com hardening (arkenfox.js) e uBlock Origin</li>
+                    <li><strong>LibreWolf</strong> — Firefox pré-configurado para privacidade</li>
+                    <li><strong>Tor Browser</strong> — para anonimato real (não para uso diário)</li>
+                    <li><strong>Mullvad Browser</strong> — mesma base do Tor, sem a rede Tor</li>
+                </ul>
+                <h4>Mensageiros</h4>
+                <ul>
+                    <li><strong>Signal</strong> — padrão ouro, protocolo aberto, sede nos EUA (risco FVEY)</li>
+                    <li><strong>Session</strong> — sem número de telefone, roteamento via onion</li>
+                    <li><strong>SimpleX</strong> — sem identificadores globais</li>
+                </ul>
+                <h4>E-mail</h4>
+                <ul>
+                    <li><strong>Proton Mail</strong> — Suíça, criptografado, código auditado</li>
+                    <li><strong>Tuta (ex-Tutanota)</strong> — Alemanha, criptografia de ponta a ponta total</li>
+                </ul>
+                <h4>Busca</h4>
+                <ul>
+                    <li><strong>DuckDuckGo</strong> — não rastreia, mas usa Bing</li>
+                    <li><strong>Brave Search</strong> — índice próprio</li>
+                    <li><strong>SearXNG</strong> — meta-buscador auto-hospedável</li>
+                </ul>
+                <h4>Sistemas Operacionais</h4>
+                <ul>
+                    <li><strong>GrapheneOS</strong> — Android hardened para Pixel</li>
+                    <li><strong>DivestOS</strong> — para dispositivos mais antigos</li>
+                    <li><strong>Qubes OS</strong> — isolamento por VMs (desktop avançado)</li>
+                    <li><strong>Whonix</strong> — anonimato via Tor forçado</li>
+                </ul>
+                <p>A escolha da ferramenta depende do seu <strong>modelo de ameaça</strong>. Não existe solução universal — existe solução adequada.</p>
+            `
+        },
+        {
+            title: "O que é OPSEC?",
+            time: "5 min de leitura",
+            group: "Grupo 01 · Fundamentos",
+            content: `
+                <p><strong>OPSEC</strong> (Operations Security) é uma metodologia originada no militar dos EUA nos anos 1960, durante a Guerra do Vietnã. O objetivo era impedir que informações não-classificadas, quando combinadas, revelassem operações sensíveis. Hoje, OPSEC é o pilar da segurança pessoal digital.</p>
+                <h4>Os 5 passos do OPSEC</h4>
+                <ul>
+                    <li><strong>1. Análise de ameaças</strong> — quem pode querer te atingir?</li>
+                    <li><strong>2. Identificação de dados críticos</strong> — o que, se exposto, te prejudicaria?</li>
+                    <li><strong>3. Análise de vulnerabilidades</strong> — onde esses dados vazam?</li>
+                    <li><strong>4. Avaliação de riscos</strong> — qual a probabilidade e impacto?</li>
+                    <li><strong>5. Aplicação de contramedidas</strong> — o que fazer para mitigar?</li>
+                </ul>
+                <h4>Exemplo prático</h4>
+                <p>Você é um ativista ambiental. Seu modelo de ameaça inclui: empresa alvo da campanha (com recursos para contratar investigadores), polícia local (com histórico de repressão), e trolls coordenados.</p>
+                <p>Dados críticos: sua identidade real, sua localização, seus contatos, suas fontes.</p>
+                <p>Vulnerabilidades: seu celular com GPS ativo, sua conta pessoal no Instagram, seu e-mail com recuperação por SMS.</p>
+                <p>Contramedidas: separar identidades digitais, usar Signal com ID anônimo, e-mail no Proton sem número de telefone, desativar GPS quando não essencial.</p>
+                <h4>OPSEC não é paranoia</h4>
+                <p>OPSEC é <strong>disciplina</strong>. A falha mais comum não é técnica — é humana. Uma foto postada sem pensar, um print compartilhado no grupo errado, um nome real usado em cadastro anônimo. A tecnologia é só uma camada. O elo fraco quase sempre é o comportamento.</p>
+            `
+        },
+        {
+            title: "Anonimato não é crime",
+            time: "7 min de leitura",
+            group: "Grupo 01 · Fundamentos",
+            content: `
+                <p>Existe um mito persistente de que anonimato é sinônimo de atividade criminosa. Essa narrativa é convenientemente promovida por quem se beneficia da vigilância em massa. Na realidade, o anonimato é uma ferramenta legítima de proteção usada por jornalistas, ativistas, denunciantes, minorias perseguidas e cidadãos comuns.</p>
+                <h4>Quem usa anonimato (e por quê)</h4>
+                <ul>
+                    <li><strong>Jornalistas</strong> — protegendo fontes em investigações sensíveis</li>
+                    <li><strong>Denunciantes</strong> — como Edward Snowden e Chelsea Manning</li>
+                    <li><strong>Ativistas</strong> — em regimes autoritários ou sob vigilância corporativa</li>
+                    <li><strong>Vítimas de abuso</strong> — reconstruindo vida sem ser rastreadas pelo agressor</li>
+                    <li><strong>Minorias</strong> — LGBTQIA+ em países criminalizantes</li>
+                    <li><strong>Profissionais de saúde</strong> — discutindo casos sem violar sigilo</li>
+                </ul>
+                <h4>O anonimato na lei brasileira</h4>
+                <p>A Constituição Federal de 1988 garante a <strong>livre manifestação do pensamento</strong> (art. 5º, IV), e o Marco Civil da Internet (Lei 12.965/2014) protege a privacidade e os dados pessoais. <strong>Não há lei no Brasil que criminalize o anonimato em si</strong>. O que é crime é usar o anonimato para cometer outros crimes — calúnia, difamação, ameaça — assim como é crime usar identidade falsa para fraudar.</p>
+                <h4>A diferença entre anonimato e pseudonimato</h4>
+                <p><strong>Anonimato</strong>: ninguém sabe quem você é, nem mesmo o serviço que você usa.</p>
+                <p><strong>Pseudonimato</strong>: você usa um nome fixo (handle), mas sua identidade real pode ser conhecida por quem administra o serviço.</p>
+                <p>A maioria das ferramentas de privacidade oferece pseudonimato, não anonimato total. O anonimato real exige camadas adicionais: Tor, máquinas virtuais, práticas rigorosas de OPSEC.</p>
+                <h4>Por que defender o anonimato</h4>
+                <p>Sociedades democráticas dependem da capacidade de dissentir sem medo de retaliação. Se todo discurso público precisa estar vinculado a uma identidade verificável, o custo da discordância aumenta — e quem mais sofre são os marginalizados. O anonimato é um <strong>direito habilitador</strong> de outros direitos.</p>
+            `
+        },
+        {
+            title: "TOR: muito além do estigma",
+            time: "6 min de leitura",
+            group: "Grupo 01 · Fundamentos",
+            content: `
+                <p>O Tor (The Onion Router) é provavelmente a ferramenta de privacidade mais mal compreendida do mundo. Associado pela mídia a "deep web" e atividades ilegais, ele é, na verdade, um projeto de software livre mantido por uma organização sem fins lucrativos, financiado por doações e grants de entidades como a NSF e o Departamento de Estado dos EUA (ironicamente).</p>
+                <h4>Como o Tor funciona</h4>
+                <p>Seu tráfego passa por três nós voluntários espalhados pelo mundo, cada um removendo uma camada de criptografia (daí "onion"). O nó de saída vê o tráfego, mas não sabe quem você é. O nó de entrada sabe quem você é, mas não sabe para onde você vai. Nenhum nó sozinho tem a informação completa.</p>
+                <h4>O que o Tor faz bem</h4>
+                <ul>
+                    <li>Esconde seu IP do site que você visita</li>
+                    <li>Contorna censura geográfica</li>
+                    <li>Dificulta correlação de tráfego por ISPs</li>
+                    <li>Permite acessar serviços .onion (hidden services)</li>
+                </ul>
+                <h4>O que o Tor NÃO faz</h4>
+                <ul>
+                    <li>Não criptograia o tráfego na saída (use HTTPS sempre)</li>
+                    <li>Não é rápido — não serve para streaming ou downloads pesados</li>
+                    <li>Não protege contra malware ou engenharia social</li>
+                    <li>Não é anônimo se você fizer login em contas pessoais</li>
+                </ul>
+                <h4>Uso legítimo e massivo</h4>
+                <p>O Tor é usado diariamente por milhões de pessoas: jornalistas do NYT e BBC têm mirrors .onion, o Facebook tem versão .onion, a CIA tem site .onion para dicas anônimas. Organizações sérias usam o Tor porque ele funciona.</p>
+                <h4>Quando usar</h4>
+                <p>Use Tor quando seu modelo de ameaça inclui vigilância de ISP, censura governamental, ou quando você precisa esconder o destino do seu tráfego. Para uso diário, um navegador hardened (LibreWolf, Mullvad Browser) é mais prático. Tor é uma ferramenta específica — não é para tudo, mas para o que serve, serve muito bem.</p>
+            `
+        },
+        {
+            title: "Qual seu nível de vigilância?",
+            time: "Interativo",
+            group: "Grupo 02 · Ferramentas Práticas",
+            content: `
+                <p>Este é um questionário de autoavaliação. Responda com sinceridade — não há nota, há diagnóstico. Cada resposta "sim" adiciona pontos ao seu nível de exposição.</p>
+                <h4>Questionário rápido</h4>
+                <ul>
+                    <li>Você usa o mesmo e-mail para tudo (trabalho, redes sociais, bancos)? <strong>+1</strong></li>
+                    <li>Seu celular tem serviços de localização sempre ativos? <strong>+1</strong></li>
+                    <li>Você usa a mesma senha em mais de um site? <strong>+2</strong></li>
+                    <li>Suas redes sociais são públicas ou têm informações pessoais (nascimento, cidade, escola)? <strong>+2</strong></li>
+                    <li>Você já clicou em links suspeitos recebidos por SMS/e-mail? <strong>+1</strong></li>
+                    <li>Seu navegador salva senhas e preenche automaticamente? <strong>+1</strong></li>
+                    <li>Você usa Wi-Fi público sem VPN? <strong>+1</strong></li>
+                    <li>Seus apps têm permissão de microfone/câmera sem necessidade? <strong>+1</strong></li>
+                    <li>Você já fez backup dos seus dados nos últimos 3 meses? <strong>-2</strong></li>
+                    <li>Você usa 2FA (autenticação em duas etapas)? <strong>-2</strong></li>
+                </ul>
+                <h4>Diagnóstico</h4>
+                <ul>
+                    <li><strong>0-3 pontos</strong>: Postura defensiva sólida. Você entende os riscos básicos.</li>
+                    <li><strong>4-7 pontos</strong>: Nível médio. Existem vetores de ataque exploráveis.</li>
+                    <li><strong>8-12 pontos</strong>: Alto risco. Você é alvo fácil para ataques comuns.</li>
+                    <li><strong>13+ pontos</strong>: Crítico. Recomenda-se revisão urgente de hábitos digitais.</li>
+                </ul>
+                <p>Este questionário é apenas um ponto de partida. Para uma avaliação completa, consulte o <strong>Checklist de OPSEC pessoal</strong> (dossiê 08).</p>
+            `
+        },
+        {
+            title: "Checklist de OPSEC pessoal",
+            time: "Interativo",
+            group: "Grupo 02 · Ferramentas Práticas",
+            content: `
+                <p>Use este checklist como referência. Marque o que já faz, identifique o que falta, e priorize as mudanças pelo seu modelo de ameaça.</p>
+                <h4>Identidades digitais</h4>
+                <ul>
+                    <li>[ ] Separação entre identidade pessoal e profissional</li>
+                    <li>[ ] E-mail dedicado para cadastros sensíveis</li>
+                    <li>[ ] E-mail descartável para cadastros de baixo risco</li>
+                    <li>[ ] Pseudônimo consistente para atividades sensíveis</li>
+                </ul>
+                <h4>Senhas e autenticação</h4>
+                <ul>
+                    <li>[ ] Gerenciador de senhas (Bitwarden, KeePass, 1Password)</li>
+                    <li>[ ] Senhas únicas em todos os serviços</li>
+                    <li>[ ] 2FA habilitado em e-mail, banco e redes sociais</li>
+                    <li>[ ] 2FA via app (Aegis, Raivo, YubiKey) — NÃO SMS</li>
+                </ul>
+                <h4>Dispositivos</h4>
+                <ul>
+                    <li>[ ] Disco criptografado (FileVault, LUKS, BitLocker)</li>
+                    <li>[ ] Sistema operacional atualizado</li>
+                    <li>[ ] Backups regulares e testados (regra 3-2-1)</li>
+                    <li>[ ] Revisão trimestral de permissões de apps</li>
+                </ul>
+                <h4>Comunicação</h4>
+                <ul>
+                    <li>[ ] Mensageiro com E2EE (Signal, Session)</li>
+                    <li>[ ] Verificação de chaves com contatos críticos</li>
+                    <li>[ ] E-mail criptografado para assuntos sensíveis (Proton, Tuta)</li>
+                </ul>
+                <h4>Rede</h4>
+                <ul>
+                    <li>[ ] DNS criptografado (DoH ou DoT)</li>
+                    <li>[ ] VPN confiável para Wi-Fi público (Mullvad, ProtonVPN)</li>
+                    <li>[ ] Navegador hardened para uso diário</li>
+                </ul>
+                <h4>Comportamento</h4>
+                <ul>
+                    <li>[ ] Não compartilhar localização em tempo real</li>
+                    <li>[ ] Revisar fotos antes de postar (EXIF, fundos)</li>
+                    <li>[ ] Desconfiar de links recebidos por qualquer canal</li>
+                    <li>[ ] Verificar URLs antes de inserir credenciais</li>
+                </ul>
+                <p>OPSEC é um processo, não um destino. Revise este checklist a cada 3 meses.</p>
+            `
+        },
+        {
+            title: "Quanto de você vira dado?",
+            time: "Interativo",
+            group: "Grupo 02 · Ferramentas Práticas",
+            content: `
+                <p>Esta é uma calculadora estimativa. Ela não mede dados reais — isso seria impossível sem acesso aos servidores das empresas. Mas ela mostra a <strong>ordem de grandezza</strong> do que você produz diariamente.</p>
+                <h4>Estimativas por atividade (por dia)</h4>
+                <ul>
+                    <li><strong>Redes sociais</strong> (1h): ~50 eventos (likes, views, shares, tempo em cada post)</li>
+                    <li><strong>Busca no Google</strong> (10 buscas): ~10 queries + contexto de localização e dispositivo</li>
+                    <li><strong>YouTube</strong> (1h): ~30 eventos (vídeos assistidos, abandonados, buscados)</li>
+                    <li><strong>E-mail</strong>: ~20 eventos (remetentes, assuntos, horários)</li>
+                    <li><strong>Navegação web</strong>: ~100 páginas visitadas + cookies + fingerprint</li>
+                    <li><strong>Celular</strong>: ~1.000 pontos de localização (se GPS ativo)</li>
+                    <li><strong>Apps de delivery</strong>: histórico completo de pedidos, endereços, horários</li>
+                </ul>
+                <h4>Total estimado diário</h4>
+                <p>Um usuário médio de smartphone gera entre <strong>1.500 e 3.000 eventos de dados por dia</strong>. Em um ano, isso representa mais de <strong>1 milhão de pontos de dados</strong> que, agregados, formam um modelo preditivo seu.</p>
+                <h4>O que as empresas fazem com isso</h4>
+                <ul>
+                    <li><strong>Publicidade</strong> — segmentação comportamental</li>
+                    <li><strong>Recomendação</strong> — manter você engajado</li>
+                    <li><strong>Scoring</strong> — em alguns países, crédito social ou seguro</li>
+                    <li><strong>Venda a terceiros</strong> — data brokers (legal em muitos lugares)</li>
+                    <li><strong>Treinamento de IA</strong> — seus dados viram modelo</li>
+                </ul>
+                <h4>Como reduzir</h4>
+                <p>Não se trata de eliminar dados — isso é impossível na vida moderna. Trata-se de <strong>reduzir a superfície</strong>: bloqueadores de anúncio (uBlock Origin), DNS privado, mensageiros E2EE, buscas sem rastreamento, e consciência de que cada app instalado é uma torneira de dados aberta.</p>
+            `
+        },
+        {
+            title: "Glossário",
+            time: "Referência",
+            group: "Grupo 02 · Ferramentas Práticas",
+            content: `
+                <p>Termos essenciais para navegar o universo da privacidade e cibersegurança.</p>
+                <h4>A</h4>
+                <ul>
+                    <li><strong>Adversary</strong> — qualquer entidade com capacidade e motivação para te atacar</li>
+                    <li><strong>Anonimato</strong> — estado de não ser identificável</li>
+                    <li><strong>Attack surface</strong> — conjunto de pontos por onde um ataque pode ocorrer</li>
+                </ul>
+                <h4>C</h4>
+                <ul>
+                    <li><strong>Criptografia E2EE</strong> — only sender and recipient can read the message</li>
+                    <li><strong>Cookie</strong> — pequeno arquivo armazenado pelo navegador para rastrear sessão</li>
+                </ul>
+                <h4>D</h4>
+                <ul>
+                    <li><strong>Data broker</strong> — empresa que coleta e vende dados pessoais</li>
+                    <li><strong>Doxxing</strong> — divulgar informações privadas de alguém publicamente</li>
+                </ul>
+                <h4>F</h4>
+                <ul>
+                    <li><strong>Fingerprinting</strong> — identificação pelo conjunto único de configurações do dispositivo/navegador</li>
+                    <li><strong>Five Eyes (FVEY)</strong> — aliança de inteligência: EUA, UK, CA, AU, NZ</li>
+                </ul>
+                <h4>M</h4>
+                <ul>
+                    <li><strong>Modelo de ameaça</strong> — análise de quem pode te atacar, como e por quê</li>
+                </ul>
+                <h4>O</h4>
+                <ul>
+                    <li><strong>OPSEC</strong> — Operations Security, metodologia de proteção de informações</li>
+                </ul>
+                <h4>P</h4>
+                <ul>
+                    <li><strong>Pseudonimato</strong> — usar nome falso de forma consistente</li>
+                    <li><strong>Phishing</strong> — fraude para roubar credenciais</li>
+                </ul>
+                <h4>S</h4>
+                <ul>
+                    <li><strong>SIGINT</strong> — Signals Intelligence, interceptação de comunicações</li>
+                    <li><strong>Steganography</strong> — esconder informação dentro de outra informação</li>
+                </ul>
+                <h4>T</h4>
+                <ul>
+                    <li><strong>Threat model</strong> — sinônimo de modelo de ameaça</li>
+                    <li><strong>Tor</strong> — rede de anonimato por roteamento cebola</li>
+                </ul>
+                <h4>Z</h4>
+                <ul>
+                    <li><strong>Zero-day</strong> — vulnerabilidade desconhecida do fabricante</li>
+                </ul>
+            `
+        },
+        {
+            title: "A LGPD e seus direitos",
+            time: "8 min de leitura",
+            group: "Grupo 03 · Brasil, Lei e Casos Reais",
+            content: `
+                <p>A <strong>Lei Geral de Proteção de Dados</strong> (Lei 13.709/2018) entrou em vigor em setembro de 2020 e é o principal marco legal brasileiro sobre privacidade. Inspirada no GDPR europeu, a LGPD estabelece regras sobre coleta, armazenamento, tratamento e compartilhamento de dados pessoais por empresas e órgãos públicos.</p>
+                <h4>Princípios fundamentais</h4>
+                <ul>
+                    <li><strong>Finalidade</strong> — dados só podem ser coletados para propósito específico e legítimo</li>
+                    <li><strong>Adequação</strong> — o tratamento deve ser compatível com a finalidade declarada</li>
+                    <li><strong>Necessidade</strong> — só coletar o mínimo necessário</li>
+                    <li><strong>Transparência</strong> — o titular deve saber o que está sendo feito</li>
+                    <li><strong>Prevenção</strong> — medidas de segurança para evitar vazamentos</li>
+                </ul>
+                <h4>Seus direitos (art. 18)</h4>
+                <p>Você pode, a qualquer momento, solicitar ao controlador dos seus dados:</p>
+                <ul>
+                    <li>Confirmação da existência de tratamento</li>
+                    <li>Acesso aos dados</li>
+                    <li>Correção de dados incompletos ou desatualizados</li>
+                    <li>Anonimização, bloqueio ou eliminação de dados desnecessários</li>
+                    <li>Portabilidade a outro fornecedor</li>
+                    <li>Eliminação dos dados tratados com seu consentimento</li>
+                    <li>Informação sobre entidades públicas ou privadas com quem o controlador compartilhou dados</li>
+                    <li>Informação sobre a possibilidade de não fornecer consentimento</li>
+                    <li>Revogação do consentimento</li>
+                </ul>
+                <h4>Como exercer</h4>
+                <p>Toda empresa que trata seus dados deve manter um canal claro para solicitações de titulares (geralmente um e-mail do tipo <em>privacidade@empresa.com</em> ou DPO). A resposta deve ser imediata (para dados simples) ou em até 15 dias (para informações completas).</p>
+                <h4>Autoridade fiscalizadora</h4>
+                <p>A <strong>ANPD</strong> (Autoridade Nacional de Proteção de Dados) é o órgão responsável por fiscalizar e aplicar sanções. Multas podem chegar a 2% do faturamento da empresa (limitado a R$ 50 milhões por infração).</p>
+                <h4>Limitações reais</h4>
+                <p>A LGPD tem exceções importantes: segurança nacional, investigação criminal e proteção da vida não se submetem integralmente à lei. Além disso, a ANPD ainda está em fase de consolidação, e a aplicação prática das multas é recente. Conhecer seus direitos é o primeiro passo — exercê-los é o segundo.</p>
+            `
+        },
+        {
+            title: "Casos reais",
+            time: "7 min de leitura",
+            group: "Grupo 03 · Brasil, Lei e Casos Reais",
+            content: `
+                <p>A teoria da vigilância só se torna concreta quando olhamos para casos documentados. Esta seção apresenta episódios reais que ilustram os riscos.</p>
+                <h4>Cambridge Analytica (2018)</h4>
+                <p>A consultoria britânica coletou dados de 87 milhões de usuários do Facebook sem consentimento explícito, através de um app de quiz. Esses dados foram usados para modelar perfis psicológicos e influenciar eleições nos EUA (2016) e no Brexit. O Facebook já sabia do problema em 2015, mas não agiu.</p>
+                <h4>Vazamento da Serpro (2020)</h4>
+                <p>Dados de 173 mil pessoas, incluindo o presidente Jair Bolsonaro e ministros, foram vazados de um sistema da Serpro (empresa pública de TI). Os dados incluíam CPF, endereço, filiação e até informações sobre veículos. O caso expôs a fragilidade de sistemas governamentais.</p>
+                <h4>Vazamento massivo de CPFs (2021)</h4>
+                <p>Um conjunto de dados contendo informações de <strong>220 milhões de brasileiros</strong> (incluindo falecidos e pessoas jurídicas) foi colocado à venda em fóruns. O pacote incluía CPF, nome, endereço, renda, score de crédito e fotos. A origem nunca foi totalmente identificada, mas suspeita-se de múltiplas fontes.</p>
+                <h4>Pegasus (2021)</h4>
+                <p>O spyware da NSO Group foi usado para infectar celulares de jornalistas, ativistas e chefes de estado em todo o mundo. No Brasil, houve relatos de investigadores e autoridades alvo do software. O Pegasus explora zero-days e não requer interação do usuário — basta o número de telefone.</p>
+                <h4>O que aprender</h4>
+                <ul>
+                    <li>Vazamentos são inevitáveis — assuma que seus dados já estão expostos</li>
+                    <li>Senhas reutilizadas são o vetor mais explorado</li>
+                    <li>2FA é obrigatório para contas críticas</li>
+                    <li>Reduzir a superfície de exposição é a única defesa sustentável</li>
+                </ul>
+            `
+        },
+        {
+            title: "A matriz da vigilância",
+            time: "Matriz",
+            group: "Grupo 03 · Brasil, Lei e Casos Reais",
+            content: `
+                <p>Este dossiê é uma ponte para a <strong>Matriz Global</strong>, onde você pode explorar em detalhes as jurisdições, alianças de inteligência, marcos regulatórios e ecossistemas de código aberto ao redor do mundo.</p>
+                <h4>O que você vai encontrar</h4>
+                <ul>
+                    <li><strong>Vetor 01</strong> — Aliança Five Eyes (EUA, UK, CA, AU, NZ)</li>
+                    <li><strong>Vetor 02</strong> — União Europeia & Schengen</li>
+                    <li><strong>Vetor 03</strong> — Estados Autoritários & Controle Estatal</li>
+                    <li><strong>Vetor 04</strong> — Sul Global & Emergência Regulatória</li>
+                </ul>
+                <h4>Como usar</h4>
+                <p>A Matriz Global apresenta dados categorizados por cores:</p>
+                <ul>
+                    <li><strong>Azul</strong> — Leis e Regulamentos</li>
+                    <li><strong>Verde</strong> — Comunidades e Advocacy</li>
+                    <li><strong>Amarelo</strong> — Projetos Open-Source</li>
+                    <li><strong>Vermelho</strong> — Perfil de Vigilância</li>
+                </ul>
+                <p>Clique no botão abaixo para acessar a Matriz Global completa, com filtros por categoria e detalhes expandidos de cada jurisdição.</p>
+            `
+        },
+        {
+            title: "Golpes com nome e sobrenome",
+            time: "5 min de leitura",
+            group: "Grupo 03 · Brasil, Lei e Casos Reais",
+            content: `
+                <p>Os golpes digitais mais comuns no Brasil têm técnicas específicas e recorrentes. Conhecer o modus operandi é a principal defesa.</p>
+                <h4>1. Golpe do WhatsApp clonado</h4>
+                <p><strong>Como funciona</strong>: o criminoso liga para a vítima se passando por atendente de operadora ou serviço, pede o código de verificação SMS que chega no celular da vítima, e assume a conta.</p>
+                <p><strong>Defesa</strong>: ative a verificação em duas etapas no WhatsApp. Nunca compartilhe códigos recebidos por SMS.</p>
+                <h4>2. Golpe do falso suporte</h4>
+                <p><strong>Como funciona</strong>: pop-up no navegador afirma que o computador está infectado e fornece um telefone. Ao ligar, o "técnico" pede instalação de software de acesso remoto (AnyDesk, TeamViewer).</p>
+                <p><strong>Defesa</strong>: empresas legítimas não fazem contato proativo assim. Feche a aba, nunca instale software solicitado por telefone.</p>
+                <h4>3. Phishing bancário</h4>
+                <p><strong>Como funciona</strong>: SMS ou e-mail com link para "regularizar" conta ou "desbloquear" app. O site é idêntico ao oficial, mas rouba credenciais.</p>
+                <p><strong>Defesa</strong>: nunca clique em links recebidos. Digite o endereço do banco manualmente ou use o app oficial.</p>
+                <h4>4. Golpe do falso boleto</h4>
+                <p><strong>Como funciona</strong>: invasão de e-mail ou sistema de empresa para alterar boletos legítimos e desviar pagamentos.</p>
+                <p><strong>Defesa</strong>: sempre confirme dados bancários por canal separado antes de pagar boletos de valores altos.</p>
+                <h4>5. Engenharia social por áudio</h4>
+                <p><strong>Como funciona</strong>: com o avanço da IA, criminosos clonam a voz de familiares em áudios curtos para pedir transferências via Pix.</p>
+                <p><strong>Defesa</strong>: combine uma "palavra de segurança" com familiares próximos. Desconfie de pedidos urgentes de dinheiro, mesmo com áudio.</p>
+                <h4>Regra universal</h4>
+                <p>Qualquer pedido urgente, com pressão emocional, pedindo dinheiro ou dados sensíveis, deve ser tratado com desconfiança máxima. <strong>Urgência é o maior indicador de golpe</strong>.</p>
+            `
+        },
+        {
+            title: "Vigiado pelo app, exposto pelo vazamento",
+            time: "6 min de leitura",
+            group: "Grupo 03 · Brasil, Lei e Casos Reais",
+            content: `
+                <p>Existe uma ilusão perigosa: a de que se você "não tem nada a esconder", não há problema em ser vigiado. Essa lógica ignora dois fatos: (1) você não controla o que é coletado sobre você, e (2) esses dados podem vazar a qualquer momento, independentemente da sua vontade.</p>
+                <h4>O ciclo vicioso</h4>
+                <ul>
+                    <li><strong>Fase 1</strong>: você baixa um app "inofensivo" (lanterna, editor de foto, jogo)</li>
+                    <li><strong>Fase 2</strong>: o app pede permissões excessivas (contatos, localização, microfone)</li>
+                    <li><strong>Fase 3</strong>: os dados são agregados em servidores de terceiros</li>
+                    <li><strong>Fase 4</strong>: a empresa sofre um vazamento ou é vendida</li>
+                    <li><strong>Fase 5</strong>: seus dados aparecem em fóruns, à venda ou públicos</li>
+                </ul>
+                <h4>Casos brasileiros recentes</h4>
+                <ul>
+                    <li><strong>Vazamento da Vivo (2015)</strong>: dados de 14 milhões de clientes expostos</li>
+                    <li><strong>Vazamento do TSE (2021)</strong>: dados de eleitores disponíveis em Telegram</li>
+                    <li><strong>Vazamento do Serasa (2018)</strong>: 22 milhões de CPFs expostos</li>
+                </ul>
+                <h4>O que você pode fazer</h4>
+                <ul>
+                    <li><strong>Minimize permissões</strong>: revise todo app instalado</li>
+                    <li><strong>Use contas descartáveis</strong>: para serviços não essenciais</li>
+                    <li><strong>Monitore seus dados</strong>: serviços como haveibeenpwned.com</li>
+                    <li><strong>Assuma o vazamento como inevitável</strong>: aja como se seus dados já estivessem expostos</li>
+                </ul>
+                <h4>A lição</h4>
+                <p>Privacidade não é sobre esconder — é sobre <strong>controle</strong>. Mesmo que você não tenha nada a esconder, você tem muito a perder se seus dados caírem em mãos erradas: sua conta bancária, sua reputação, sua família, sua segurança física. O direito à privacidade é o direito de decidir quem sabe o quê sobre você, e quando.</p>
+            `
+        },
+        {
+            title: "O seu celular é um espião de bolso",
+            time: "6 min de leitura",
+            group: "Grupo 04 · Aprofundamento",
+            content: `
+                <p>Seu smartphone é o dispositivo de vigilância mais eficaz já criado. Ele coleta sua localização 24/7, grava suas conversas (via assistentes), fotografa sua vida, conhece seus contatos, seus hábitos, seus desejos — e faz tudo isso com sua permissão formal, obtida através de telas de termos que ninguém lê.</p>
+                <h4>O que seu celular sabe</h4>
+                <ul>
+                    <li><strong>Localização</strong>: histórico completo de onde você esteve</li>
+                    <li><strong>Redes Wi-Fi</strong>: onde você mora, trabalha, frequenta</li>
+                    <li><strong>Bluetooth</strong>: com quem você convive (dispositivos próximos)</li>
+                    <li><strong>Sensores</strong>: acelerômetro, giroscópio — até como você segura o telefone</li>
+                    <li><strong>Apps instalados</strong>: seus interesses, saúde mental, vida financeira</li>
+                </ul>
+                <h4>O modelo de negócio dos sistemas móveis</h4>
+                <p>Android (Google) e iOS (Apple) são gratuitos porque você é a matéria-prima. Ambos coletam telemetria extensiva. A diferença é que a Apple monetiza hardware + serviços, enquanto o Google monetiza dados. Nenhum dos dois é "neutro".</p>
+                <h4>Alternativas reais</h4>
+                <ul>
+                    <li><strong>GrapheneOS</strong> — Android hardened, apenas para Pixel, foco em segurança</li>
+                    <li><strong>DivestOS</strong> — para dispositivos mais antigos</li>
+                    <li><strong>/e/OS</strong> — Android degoogled, mais amigável</li>
+                    <li><strong>CalyxOS</strong> — equilíbrio entre privacidade e usabilidade</li>
+                </ul>
+                <h4>Se você não pode trocar de sistema</h4>
+                <ul>
+                    <li>Desative serviços de localização quando não usar</li>
+                    <li>Revise permissões de todos os apps (mensalmente)</li>
+                    <li>Use DNS privado (DoT/DoH)</li>
+                    <li>Evite apps que não precisam de conta</li>
+                    <li>Desative assistentes de voz (Siri, Google Assistant)</li>
+                </ul>
+                <p>O celular é uma ferramenta poderosa — mas também é um microfone, câmera e GPS sempre ativos no seu bolso. Trate-o com o respeito que essa capacidade exige.</p>
+            `
+        },
+        {
+            title: "A tríade da sobrevivência digital",
+            time: "7 min de leitura",
+            group: "Grupo 04 · Aprofundamento",
+            content: `
+                <p>Privacidade, segurança e anonimato são três conceitos relacionados mas <strong>distintos</strong>. Confundi-los leva a decisões erradas. Esta tríade é a base de qualquer postura defensiva coerente.</p>
+                <h4>Privacidade</h4>
+                <p><strong>Definição</strong>: controle sobre quem sabe o quê sobre você.</p>
+                <p><strong>Exemplo</strong>: usar cortinas em casa, fechar a porta do banheiro, não contar sua senha.</p>
+                <p><strong>Ferramentas</strong>: Signal, Proton Mail, navegadores hardened, bloqueadores de anúncio.</p>
+                <h4>Segurança</h4>
+                <p><strong>Definição</strong>: proteção contra acesso, alteração ou destruição não autorizada.</p>
+                <p><strong>Exemplo</strong>: trancar a porta de casa, usar senha forte, criptografar o disco.</p>
+                <p><strong>Ferramentas</strong>: gerenciadores de senha, 2FA, criptografia de disco, backups.</p>
+                <h4>Anonimato</h4>
+                <p><strong>Definição</strong>: estado de não ser identificável.</p>
+                <p><strong>Exemplo</strong>: usar máscara em protesto, pagar em dinheiro, usar pseudônimo consistente.</p>
+                <p><strong>Ferramentas</strong>: Tor, Session, SimpleX, cash, máquinas virtuais descartáveis.</p>
+                <h4>Como eles se relacionam</h4>
+                <ul>
+                    <li>Você pode ter <strong>privacidade sem anonimato</strong> (ex: Signal com seu número real)</li>
+                    <li>Você pode ter <strong>segurança sem privacidade</strong> (ex: banco criptografado mas que compartilha dados com o governo)</li>
+                    <li>Você pode ter <strong>anonimato sem segurança</strong> (ex: fórum anônimo mas com senha fraca)</li>
+                    <li>O ideal é combinar os três, de acordo com seu modelo de ameaça</li>
+                </ul>
+                <h4>Aplicação prática</h4>
+                <p>Antes de escolher uma ferramenta, pergunte: o que eu estou tentando proteger? De quem? Com que recursos? A resposta define se você precisa de privacidade, segurança ou anonimato — ou dos três.</p>
+            `
+        },
+        {
+            title: "IAs locais: privacidade no seu próprio hardware",
+            time: "7 min de leitura",
+            group: "Grupo 04 · Aprofundamento",
+            content: `
+                <p>Os grandes modelos de linguagem (ChatGPT, Gemini, Claude) são convenientes, mas cada consulta que você envia é registrada, processada em servidores remotos e potencialmente usada para treinamento. Para conversas sensíveis, diagnósticos médicos pessoais, rascunhos de escrita criativa ou análise de documentos confidenciais, a solução é rodar IA <strong>localmente</strong>.</p>
+                <h4>O que é IA local</h4>
+                <p>Modelos de linguagem que rodam inteiramente no seu dispositivo, sem conexão com servidores externos. Seus dados nunca saem da sua máquina.</p>
+                <h4>Ferramentas recomendadas</h4>
+                <ul>
+                    <li><strong>Ollama</strong> — ferramenta simples para rodar modelos localmente (Mac, Linux, Windows)</li>
+                    <li><strong>LM Studio</strong> — interface gráfica amigável</li>
+                    <li><strong>llama.cpp</strong> — execução otimizada em CPU</li>
+                    <li><strong>GPT4All</strong> — interface desktop com modelos pré-configurados</li>
+                </ul>
+                <h4>Modelos recomendados</h4>
+                <ul>
+                    <li><strong>Llama 3</strong> (Meta) — bom equilíbrio entre tamanho e capacidade</li>
+                    <li><strong>Mistral</strong> — eficiente, boa qualidade</li>
+                    <li><strong>Phi-3</strong> (Microsoft) — pequeno mas surpreendentemente capaz</li>
+                    <li><strong>Qwen</strong> — forte em tarefas técnicas</li>
+                </ul>
+                <h4>Requisitos de hardware</h4>
+                <p>Modelos pequenos (3-7B parâmetros) rodam em qualquer computador moderno com 8GB+ de RAM. Modelos maiores (13B+) exigem 16GB+ e preferencialmente GPU. Modelos quantizados (GGUF) reduzem drasticamente os requisitos.</p>
+                <h4>Vantagens</h4>
+                <ul>
+                    <li>Privacidade total — nada sai do seu dispositivo</li>
+                    <li>Sem censura corporativa</li>
+                    <li>Funciona offline</li>
+                    <li>Sem assinatura mensal</li>
+                </ul>
+                <h4>Limitações</h4>
+                <ul>
+                    <li>Capacidade inferior aos modelos de fronteira (GPT-4, Claude 3)</li>
+                    <li>Requer hardware adequado</li>
+                    <li>Configuração inicial pode ser técnica</li>
+                </ul>
+                <p>IA local é a fronteira da privacidade na era da inteligência artificial. Para quem leva privacidade a sério, é o caminho inevitável.</p>
+            `
+        },
+        {
+            title: "Navegadores e mecanismos de busca sob a lupa",
+            time: "6 min de leitura",
+            group: "Grupo 04 · Aprofundamento",
+            content: `
+                <p>O navegador é a janela pela qual você vê a internet — e pela qual a internet vê você. A escolha do navegador e do mecanismo de busca define grande parte da sua superfície de exposição.</p>
+                <h4>Navegadores: análise rápida</h4>
+                <ul>
+                    <li><strong>Chrome</strong> — dominante, mas pertence à maior empresa de vigilância do mundo. Evitar.</li>
+                    <li><strong>Edge</strong> — mesmo motor do Chrome, telemetria Microsoft. Evitar.</li>
+                    <li><strong>Firefox</strong> — independente, código aberto, personalizável. Recomendado com hardening.</li>
+                    <li><strong>Brave</strong> — rápido, bloqueia anúncios, mas tem controvérsias passadas. Usável.</li>
+                    <li><strong>LibreWolf</strong> — Firefox pré-configurado para privacidade. Recomendado.</li>
+                    <li><strong>Tor Browser</strong> — anonimato real, mas lento. Para uso específico.</li>
+                    <li><strong>Mullvad Browser</strong> — mesma base do Tor, sem a rede. Excelente para uso diário.</li>
+                </ul>
+                <h4>Buscadores: análise rápida</h4>
+                <ul>
+                    <li><strong>Google</strong> — o mais preciso, mas o mais invasivo. Evitar se privacidade importa.</li>
+                    <li><strong>Bing</strong> — Microsoft, telemetria pesada. Evitar.</li>
+                    <li><strong>DuckDuckGo</strong> — não rastreia, mas usa Bing como fonte. Bom para uso geral.</li>
+                    <li><strong>Brave Search</strong> — índice próprio, independente. Recomendado.</li>
+                    <li><strong>Startpage</strong> — resultados do Google sem rastreamento. Usável.</li>
+                    <li><strong>SearXNG</strong> — meta-buscador auto-hospedável. Para usuários avançados.</li>
+                    <li><strong>Kagi</strong> — pago, sem anúncios, sem rastreamento. Excelente se puder pagar.</li>
+                </ul>
+                <h4>Extensões essenciais</h4>
+                <ul>
+                    <li><strong>uBlock Origin</strong> — bloqueador de anúncios e rastreadores</li>
+                    <li><strong>HTTPS Everywhere</strong> (ou forçar HTTPS no Firefox) — criptografia</li>
+                    <li><strong>ClearURLs</strong> — remove parâmetros de rastreamento de URLs</li>
+                    <li><strong>Bitwarden</strong> — gerenciador de senhas</li>
+                </ul>
+                <h4>A combinação recomendada</h4>
+                <p>Para uso diário: <strong>LibreWolf + Brave Search + uBlock Origin + Bitwarden</strong>. Para uso sensível: <strong>Mullvad Browser</strong> ou <strong>Tor Browser</strong>. Nunca use Chrome ou Edge se privacidade é prioridade.</p>
+            `
+        },
+        {
+            title: "Bastidores e fontes",
+            time: "4 min de leitura",
+            group: "Grupo 04 · Aprofundamento",
+            content: `
+                <p>Este projeto é independente, sem fins lucrativos e construído como exercício acadêmico e militância digital. Todas as informações apresentadas são baseadas em fontes públicas e verificáveis.</p>
+                <h4>Fontes primárias</h4>
+                <ul>
+                    <li><strong>Documentos Snowden (2013)</strong> — revelações sobre PRISM, XKeyscore, Bullrun</li>
+                    <li><strong>WikiVault / WikiLeaks</strong> — dumps de agências de inteligência</li>
+                    <li><strong>Relatórios da EFF</strong> — Electronic Frontier Foundation</li>
+                    <li><strong>Access Now</strong> — relatórios anuais sobre direitos digitais</li>
+                    <li><strong>Relatórios da Privacy International</strong></li>
+                </ul>
+                <h4>Fontes brasileiras</h4>
+                <ul>
+                    <li><strong>CGI.br / CETIC.br</strong> — pesquisas sobre uso de internet no Brasil</li>
+                    <li><strong>Coding Rights</strong> — pesquisa em direitos digitais</li>
+                    <li><strong>Internet Lab</strong> — pesquisa acadêmica</li>
+                    <li><strong>Texto da LGPD (Lei 13.709/2018)</strong></li>
+                    <li><strong>Reportagens do The Intercept Brasil</strong></li>
+                </ul>
+                <h4>Leitura recomendada</h4>
+                <ul>
+                    <li><em>Permanent Record</em> — Edward Snowden</li>
+                    <li><em>The Age of Surveillance Capitalism</em> — Shoshana Zuboff</li>
+                    <li><em>Privacy is Power</em> — Carissa Véliz</li>
+                    <li><em>Data and Goliath</em> — Bruce Schneier</li>
+                </ul>
+                <h4>Como contribuir</h4>
+                <p>Este é um projeto em construção. Se você encontrou erro, tem sugestão ou quer contribuir com conteúdo, entre em contato via Discord (link na seção Comunidade). Todo código é aberto, todo conteúdo é revisável.</p>
+                <h4>Licença</h4>
+                <p>Todo o conteúdo deste projeto é disponibilizado sob licença livre, para fins educativos e de advocacy. Use, copie, adapte — mas mantenha a atribuição e não use para fins comerciais.</p>
+            `
+        }
+    ];
+
+    // ===== MATRIZ DETALHADA (dados) =====
+    const matrixDetails = [
+        // LEIS
+        { country: "Estados Unidos", cat: "lei", title: "Privacy Act (1974) + leis estaduais", desc: "Sem lei federal abrangente. CCPA (Califórnia), BIPA (Illinois) e outras leis estaduais fragmentadas." },
+        { country: "União Europeia", cat: "lei", title: "GDPR (Regulamento Geral de Proteção de Dados)", desc: "Padrão ouro global desde 2018. Multas de até 4% do faturamento global. Aplicável a qualquer empresa que processe dados de cidadãos europeus." },
+        { country: "Brasil", cat: "lei", title: "LGPD (Lei 13.709/2018)", desc: "Em vigor desde 2020. Autoridade: ANPD. Inspirada no GDPR, mas com aplicação ainda em consolidação." },
+        { country: "Alemanha", cat: "lei", title: "BDSG + GDPR", desc: "Bundesdatenschutzgesetz complementa o GDPR. Uma das culturas de privacidade mais fortes do mundo, com raízes históricas na Stasi e Gestapo." },
+        { country: "Rússia", cat: "lei", title: "Lei Yarovaya (2016) + SORM-3", desc: "Obriga retenção de dados e entrega de chaves criptográficas. SORM-3 permite interceptação em tempo real sem ordem judicial." },
+        { country: "China", cat: "lei", title: "PIPL (Personal Information Protection Law, 2021)", desc: "Similar ao GDPR na forma, mas com exceções amplas para segurança nacional. Forte controle estatal sobre dados." },
+        { country: "Índia", cat: "lei", title: "DPDP Act (2023)", desc: "Digital Personal Data Protection. Substitui o projeto de 2019 após decisão do Supremo sobre privacidade como direito fundamental." },
+        { country: "Austrália / NZ", cat: "lei", title: "Privacy Act 1988 (AU) · Privacy Act 2020 (NZ)", desc: "Marcos em atualização. Ambos membros do Five Eyes, com histórico de expansão de poderes de vigilância." },
+        { country: "África do Sul", cat: "lei", title: "POPIA (2020)", desc: "Protection of Personal Information Act. Inspirada no GDPR, é um dos marcos mais robustos do continente africano." },
+        { country: "Japão", cat: "lei", title: "APPI (reformada em 2022)", desc: "Act on Protection of Personal Information. Multas mais altas e maior poder regulatório após reformas recentes." },
+
+        // COMUNIDADES
+        { country: "Estados Unidos", cat: "comunidade", title: "Electronic Frontier Foundation (EFF)", desc: "Maior organização de defesa de direitos digitais do mundo. Litígios estratégicos, pesquisa e advocacy." },
+        { country: "Estados Unidos", cat: "comunidade", title: "Access Now", desc: "Atuação global em direitos digitais, com foco em ativistas e jornalistas em risco." },
+        { country: "União Europeia", cat: "comunidade", title: "EDRi (European Digital Rights)", desc: "Rede de 40+ organizações europeias de direitos digitais." },
+        { country: "França", cat: "comunidade", title: "La Quadrature du Net", desc: "Advocacy francês contra vigilância em massa e por neutralidade da rede." },
+        { country: "Alemanha", cat: "comunidade", title: "Chaos Computer Club (CCC)", desc: "Maior associação de hackers da Europa. Convenção anual (Congress) é referência global." },
+        { country: "Alemanha", cat: "comunidade", title: "Digitale Gesellschaft", desc: "Associação alemã focada em direitos digitais e privacidade." },
+        { country: "Brasil", cat: "comunidade", title: "Coding Rights · Internet Lab", desc: "Pesquisa e advocacy em direitos digitais no Brasil, com foco em gênero e vigilância." },
+        { country: "Brasil", cat: "comunidade", title: "Comitê Gestor da Internet (CGI.br)", desc: "Órgão multissetorial responsável por diretrizes da internet no Brasil." },
+        { country: "Rússia", cat: "comunidade", title: "RoskomSvoboda", desc: "Organização que luta contra censura e por liberdade de internet na Rússia." },
+        { country: "China", cat: "comunidade", title: "GreatFire.org · China Digital Times", desc: "Monitoramento de censura e arquivamento de conteúdo bloqueado pelo Great Firewall." },
+        { country: "Índia", cat: "comunidade", title: "Internet Freedom Foundation (IFF) · SFLC.in", desc: "Advocacy em direitos digitais e software livre na Índia." },
+        { country: "Austrália", cat: "comunidade", title: "Digital Rights Watch (AU) · Tech Liberty NZ", desc: "Defesa de direitos digitais na Oceania." },
+        { country: "África do Sul", cat: "comunidade", title: "Right2Know · Code for South Africa", desc: "Advocacy por transparência e uso de tecnologia para direitos sociais." },
+        { country: "Japão", cat: "comunidade", title: "Japan Internet Providers Association · Human Rights Now", desc: "Associações de ISPs e ONGs de direitos humanos com foco digital." },
+
+        // PROJETOS
+        { country: "Estados Unidos", cat: "projeto", title: "Signal Foundation · Tor Project · Mozilla", desc: "Signal (mensageiro E2EE), Tor (rede de anonimato), Firefox (navegador independente)." },
+        { country: "União Europeia", cat: "projeto", title: "Nextcloud · Proton · Tutanota · Matrix.org", desc: "Nextcloud (nuvem auto-hospedada), Proton/Tuta (e-mail criptografado), Matrix (protocolo aberto de mensagens)." },
+        { country: "Alemanha", cat: "projeto", title: "GnuPG · KDE · FSFE", desc: "GnuPG (criptografia PGP), KDE (ambiente desktop), FSFE (Free Software Foundation Europe)." },
+        { country: "Brasil", cat: "projeto", title: "Serpro · TLSNotary BR · Criptografia sem Fronteiras", desc: "Serpro (TI governamental), TLSNotary (provas criptográficas), Criptografia sem Fronteiras (educação)." },
+        { country: "Rússia", cat: "projeto", title: "Qubes OS · WireGuard", desc: "Qubes (SO baseado em isolamento por VMs), WireGuard (protocolo VPN moderno, origem russa)." },
+        { country: "China", cat: "projeto", title: "Shadowsocks · V2Ray · Trojan", desc: "Ferramentas de contorno do Great Firewall, desenvolvidas pela comunidade técnica chinesa." },
+        { country: "Austrália", cat: "projeto", title: "Session", desc: "Mensageiro descentralizado desenvolvido na Austrália, sem número de telefone." },
+        { country: "África do Sul", cat: "projeto", title: "OpenUp · Driftwood", desc: "Ferramentas locais para transparência governamental e dados públicos." },
+        { country: "Japão", cat: "projeto", title: "Sakura VPS · Line (E2EE)", desc: "Hosting privacy-friendly e mensageiro com E2EE opcional." },
+        { country: "Índia", cat: "projeto", title: "Signal (adoção massiva) · local-first apps", desc: "Signal é dominante na Índia. Forte movimento de apps locais e auto-hospedados." },
+
+        // PERFIL
+        { country: "Five Eyes", cat: "perfil", title: "Interceptação em massa documentada", desc: "PRISM, XKeyscore, MUSCULAR. Capacidade SIGINT sem precedentes. Jurisdições: EUA, UK, CA, AU, NZ." },
+        { country: "União Europeia", cat: "perfil", title: "Padrão ouro em regulação", desc: "Cultura de proteção de dados, GDPR como referência global. Alguns países mantêm agências SIGINT ativas (GCHQ, DGSE, BND)." },
+        { country: "Rússia", cat: "perfil", title: "Soberania digital estatal", desc: "SORM-3, retenção obrigatória, backdoors exigidos. Censura e controle de infraestrutura." },
+        { country: "China", cat: "perfil", title: "Controle estatal total", desc: "Great Firewall, sistema de crédito social, retenção massiva de dados, vigilância com IA (reconhecimento facial em escala)." },
+        { country: "Brasil", cat: "perfil", title: "Vigilância em consolidação", desc: "Marco Civil da Internet protege, mas leis recentes (fake news, IA) podem enfraquecer. Histórico de vazamentos governamentais." },
+        { country: "Índia", cat: "perfil", title: "Tensão entre direitos e vigilância", desc: "Supremo reconheceu privacidade como direito fundamental (2017), mas leis de vigilância permanecem amplas." }
+    ];
+
+    // ===== ACHIEVEMENTS =====
+    const achievementsList = [
+        { id: 'first', icon: '📖', name: 'Primeiro Passo', req: 1 },
+        { id: 'five', icon: '📚', name: '5 Dossiês', req: 5 },
+        { id: 'ten', icon: '🎯', name: '10 Dossiês', req: 10 },
+        { id: 'all', icon: '🏆', name: 'Arquivo Completo', req: 20 },
+        { id: 'challenge', icon: '⚡', name: 'Desafio Semanal', req: 'challenge' },
+        { id: 'operator', icon: '🔧', name: 'Operador', req: 200 },
+        { id: 'analyst', icon: '🔬', name: 'Analista', req: 500 },
+        { id: 'streak3', icon: '🔥', name: 'Sequência 3', req: 'streak3' },
+        { id: 'explorer', icon: '🗺️', name: 'Explorador', req: 'matriz' },
+        { id: 'veteran', icon: '⭐', name: 'Veterano', req: 1000 }
+    ];
+
+    // ===== NAVIGATION =====
+    let currentDossie = 0;
+
+    function showView(viewName) {
+        document.querySelectorAll('.view').forEach(v => v.classList.remove('active'));
+        const view = document.getElementById('view-' + viewName);
+        if (view) view.classList.add('active');
+
+        document.querySelectorAll('nav a').forEach(a => a.classList.remove('active'));
+        const navLink = document.querySelector(`nav a[data-view="${viewName}"]`);
+        if (navLink) navLink.classList.add('active');
+
+        window.scrollTo(0, 0);
+    }
+
+    // ===== DOSSIÊS RENDER =====
+    function renderDossieLists() {
+        const groups = { 1: [], 2: [], 3: [], 4: [] };
+        dossies.forEach((d, i) => {
+            const g = i < 6 ? 1 : i < 10 ? 2 : i < 15 ? 3 : 4;
+            groups[g].push({ ...d, idx: i });
+        });
+
+        for (let g = 1; g <= 4; g++) {
+            const container = document.getElementById('group-' + g);
+            container.innerHTML = groups[g].map(d => `
+                <a class="dossie-item" onclick="openDossie(${d.idx})">
+                    <span>${String(d.idx + 1).padStart(2, '0')} · ${d.title}</span>
+                    <span class="meta">${d.time}</span>
+                </a>
+            `).join('');
+        }
+    }
+
+    function openDossie(idx) {
+        currentDossie = idx;
+        const d = dossies[idx];
+        document.getElementById('dossie-path-title').textContent = d.title;
+        document.getElementById('dossie-number').textContent = `DOSSIÊ ${String(idx + 1).padStart(2, '0')} / 20`;
+        document.getElementById('dossie-title').textContent = d.title;
+        document.getElementById('dossie-time').textContent = d.time;
+        document.getElementById('dossie-group').textContent = d.group;
+        document.getElementById('dossie-content').innerHTML = d.content;
+
+        document.getElementById('btn-prev').disabled = idx === 0;
+        document.getElementById('btn-next').disabled = idx === dossies.length - 1;
+
+        const btnRead = document.getElementById('btn-mark-read');
+        if (userData.readDossies.includes(idx)) {
+            btnRead.textContent = '✓ Já marcado como lido';
+            btnRead.classList.add('done');
+        } else {
+            btnRead.textContent = '✓ Marcar como lido (+25 XP)';
+            btnRead.classList.remove('done');
+        }
+
+        showView('dossie');
+    }
+
+    function navDossie(dir) {
+        const newIdx = currentDossie + dir;
+        if (newIdx >= 0 && newIdx < dossies.length) openDossie(newIdx);
+    }
+
+    // ===== MATRIZ RENDER =====
+    function renderMatrixGrid() {
+        const vectors = [
+            {
+                id: 'VETOR 01', title: 'ALIANÇA FIVE EYES (FVEY)',
+                jurisdictions: 'EUA · Reino Unido · Canadá · Austrália · Nova Zelândia',
+                profile: 'Interceptação em massa documentada (PRISM, XKeyscore). Alta capacidade de SIGINT.',
+                laws: 'Privacy Act (EUA), CCPA, BIPA, Privacy Act 1988 (AU). Sem lei federal unificada nos EUA.',
+                communities: 'EFF (EUA) · Digital Rights Watch (AU) · Tech Liberty NZ',
+                projects: 'Signal Foundation · Tor Project · Mozilla · Session (AU)'
+            },
+            {
+                id: 'VETOR 02', title: 'UNIÃO EUROPEIA & SCHENGEN',
+                jurisdictions: 'UE (foco) · Alemanha · Suíça (associado técnico)',
+                profile: 'Padrão ouro em regulação de privacidade e cultura de proteção de dados.',
+                laws: 'GDPR (UE) · BDSG (Alemanha)',
+                communities: 'EDRi · La Quadrature du Net · Chaos Computer Club (CCC) · Digitale Gesellschaft',
+                projects: 'Nextcloud · Proton (CH) · Tutanota (DE) · GnuPG · KDE · FSFE · Matrix.org'
+            },
+            {
+                id: 'VETOR 03', title: 'ESTADOS AUTORITÁRIOS & CONTROLE ESTATAL',
+                jurisdictions: 'China · Rússia',
+                profile: 'Soberania digital estatal, retenção obrigatória de dados, backdoors criptográficos e censura.',
+                laws: 'PIPL (China) · Lei Yarovaya & SORM-3 (Rússia)',
+                communities: 'GreatFire.org · China Digital Times · RoskomSvoboda',
+                projects: 'Shadowsocks · V2Ray · Trojan (CN) · Qubes OS · WireGuard (RU)'
+            },
+            {
+                id: 'VETOR 04', title: 'SUL GLOBAL & EMERGÊNCIA REGULATÓRIA',
+                jurisdictions: 'Brasil · Índia · África do Sul',
+                profile: 'Marcos legais em consolidação, forte ativismo digital contra vigilância estatal e corporativa.',
+                laws: 'LGPD (BR) · DPDP Act (IN) · POPIA (ZA)',
+                communities: 'Coding Rights · Internet Lab · CGI.br (BR) · IFF · SFLC.in (IN) · Right2Know · Code for SA (ZA)',
+                projects: 'Serpro · TLSNotary BR · Criptografia sem Fronteiras (BR) · Signal (adoção massiva IN)'
+            }
+        ];
+
+        document.getElementById('matrix-grid').innerHTML = vectors.map(v => `
+            <div class="vector-card" onclick="showMatrixDetail()">
+                <div class="vector-header">
+                    <div class="vector-id">${v.id}</div>
+                    <div class="vector-title">${v.title}</div>
+                </div>
+                <div class="vector-body">
+                    <div class="vector-row"><span class="vector-label">Jurisdições</span><span class="vector-value">${v.jurisdictions}</span></div>
+                    <div class="vector-row"><span class="vector-label">Perfil</span><span class="vector-value">${v.profile}</span></div>
+                    <div class="vector-row"><span class="vector-label">Marcos Legais</span><span class="vector-value">${v.laws}</span></div>
+                    <div class="vector-row"><span class="vector-label">Comunidades</span><span class="vector-value">${v.communities}</span></div>
+                    <div class="vector-row"><span class="vector-label">Projetos</span><span class="vector-value">${v.projects}</span></div>
+                </div>
+            </div>
+        `).join('');
+    }
+
+    function showMatrixDetail() {
+        filterMatrix('all');
+        showView('matriz-detail');
+        userData.visitedMatriz = true;
+        saveData();
+        checkAchievements();
+    }
+
+    function filterMatrix(cat) {
+        document.querySelectorAll('.matrix-tab').forEach(t => t.classList.remove('active'));
+        document.querySelector(`.matrix-tab[data-cat="${cat}"]`).classList.add('active');
+
+        const filtered = cat === 'all' ? matrixDetails : matrixDetails.filter(d => d.cat === cat);
+        document.getElementById('matrix-detail-grid').innerHTML = filtered.map(d => `
+            <div class="detail-card" data-cat="${d.cat}">
+                <div class="country">${d.country.toUpperCase()}</div>
+                <div class="cat-tag">${d.cat === 'lei' ? 'LEI' : d.cat === 'comunidade' ? 'COMUNIDADE' : d.cat === 'projeto' ? 'PROJETO' : 'PERFIL'}</div>
+                <div class="title">${d.title}</div>
+                <div class="desc">${d.desc}</div>
+            </div>
+        `).join('');
+    }
+
+    // ===== PAINEL DO USUÁRIO =====
+    const STORAGE_KEY = 'kest0_user_v2';
+    const defaults = {
+        xp: 0,
+        readDossies: [],
+        streak: 0,
+        lastVisit: null,
+        challengeDoneToday: null,
+        achievements: [],
+        visitedMatriz: false,
+        totalTime: 0
+    };
+
+    let userData = {};
+
+    function loadData() {
+        try {
+            const stored = JSON.parse(localStorage.getItem(STORAGE_KEY));
+            userData = { ...defaults, ...(stored || {}) };
+        } catch (e) {
+            userData = { ...defaults };
+        }
+        updateStreak();
+    }
+
+    function saveData() {
+        localStorage.setItem(STORAGE_KEY, JSON.stringify(userData));
+    }
+
+    function updateStreak() {
+        const today = new Date().toDateString();
+        if (userData.lastVisit !== today) {
+            const yesterday = new Date();
+            yesterday.setDate(yesterday.getDate() - 1);
+            if (userData.lastVisit === yesterday.toDateString()) {
+                userData.streak += 1;
+            } else if (userData.lastVisit !== null) {
+                userData.streak = 1;
+            } else {
+                userData.streak = 1;
+            }
+            userData.lastVisit = today;
+            saveData();
+        }
+    }
+
+    function getLevel() {
+        if (userData.xp >= 1000) return { name: 'VETERANO', tag: 'NÍVEL 05', next: null, nextXP: 1000 };
+        if (userData.xp >= 500) return { name: 'ANALISTA', tag: 'NÍVEL 04', next: 'Veterano', nextXP: 1000 };
+        if (userData.xp >= 200) return { name: 'OPERADOR', tag: 'NÍVEL 03', next: 'Analista', nextXP: 500 };
+        if (userData.xp >= 50) return { name: 'APRENDIZ', tag: 'NÍVEL 02', next: 'Operador', nextXP: 200 };
+        return { name: 'INICIANTE', tag: 'NÍVEL 01', next: 'Aprendiz', nextXP: 50 };
+    }
+
+    function renderPanel() {
+        const level = getLevel();
+        document.getElementById('panel-level-name').textContent = level.name;
+        document.getElementById('panel-level-tag').textContent = level.tag;
+        document.getElementById('panel-xp').textContent = userData.xp;
+
+        document.getElementById('stat-read').textContent = userData.readDossies.length;
+        document.getElementById('stat-read-sub').textContent = Math.round((userData.readDossies.length / 20) * 100) + '% concluído';
+        document.getElementById('stat-streak').textContent = userData.streak;
+        document.getElementById('stat-ach').textContent = userData.achievements.length;
+        document.getElementById('stat-ach-sub').textContent = 'desbloqueadas';
+        document.getElementById('stat-time').textContent = (userData.readDossies.length * 6) + ' min';
+
+        // Progress bar
+        const prevLevelXP = level.nextXP === 50 ? 0 : level.nextXP === 200 ? 50 : level.nextXP === 500 ? 200 : level.nextXP === 1000 ? 500 : 500;
+        const progress = level.next ? ((userData.xp - prevLevelXP) / (level.nextXP - prevLevelXP)) * 100 : 100;
+        document.getElementById('progress-current').textContent = level.name;
+        document.getElementById('progress-next').textContent = level.next ? `Próximo: ${level.next} · ${userData.xp}/${level.nextXP} XP` : 'Nível máximo atingido';
+        setTimeout(() => {
+            document.getElementById('progress-fill').style.width = Math.min(progress, 100) + '%';
+        }, 100);
+
+        // Challenge
+        const challenges = [
+            "Ative a verificação em duas etapas (2FA) em pelo menos uma conta crítica.",
+            "Instale um gerenciador de senhas e migre 3 contas importantes.",
+            "Revise as permissões de 5 aplicativos no seu celular.",
+            "Configure um navegador focado em privacidade (ex: Firefox + uBlock).",
+            "Faça um backup criptografado de seus documentos essenciais.",
+            "Verifique se seus dados já vazaram em haveibeenpwned.com.",
+            "Desative serviços de localização quando não estiver usando."
+        ];
+        const today = new Date().toDateString();
+        const idx = new Date().getDay() % challenges.length;
+        document.getElementById('challenge-text').textContent = challenges[idx];
+
+        const btn = document.getElementById('btn-challenge');
+        if (userData.challengeDoneToday === today) {
+            btn.textContent = '✓ Concluído hoje';
+            btn.style.opacity = '0.5';
+            btn.disabled = true;
+        } else {
+            btn.textContent = 'Marcar como concluído (+50 XP)';
+            btn.style.opacity = '1';
+            btn.disabled = false;
+        }
+
+        renderAchievements();
+    }
+
+    function renderAchievements() {
+        const grid = document.getElementById('achievements-grid');
+        grid.innerHTML = achievementsList.map(a => {
+            const unlocked = userData.achievements.includes(a.id);
+            return `
+                <div class="achievement ${unlocked ? 'unlocked' : ''}">
+                    <div class="ach-icon">${a.icon}</div>
+                    <div class="ach-name">${a.name}</div>
+                </div>
+            `;
+        }).join('');
+    }
+
+    function checkAchievements() {
+        const checks = {
+            'first': userData.readDossies.length >= 1,
+            'five': userData.readDossies.length >= 5,
+            'ten': userData.readDossies.length >= 10,
+            'all': userData.readDossies.length >= 20,
+            'challenge': userData.challengeDoneToday !== null,
+            'operator': userData.xp >= 200,
+            'analyst': userData.xp >= 500,
+            'streak3': userData.streak >= 3,
+            'explorer': userData.visitedMatriz === true,
+            'veteran': userData.xp >= 1000
+        };
+
+        let newUnlock = false;
+        for (const [id, condition] of Object.entries(checks)) {
+            if (condition && !userData.achievements.includes(id)) {
+                userData.achievements.push(id);
+                newUnlock = true;
+                const ach = achievementsList.find(a => a.id === id);
+                showToast(`🏆 Conquista desbloqueada: ${ach.name}`);
+            }
+        }
+        if (newUnlock) {
+            saveData();
+            renderPanel();
+        }
+    }
+
+    function markAsRead() {
+        if (userData.readDossies.includes(currentDossie)) return;
+        userData.readDossies.push(currentDossie);
+        userData.xp += 25;
+        saveData();
+        checkAchievements();
+        renderPanel();
+        showToast('+25 XP · Dossiê concluído');
+
+        const btn = document.getElementById('btn-mark-read');
+        btn.textContent = '✓ Já marcado como lido';
+        btn.classList.add('done');
+    }
+
+    function completeChallenge() {
+        const today = new Date().toDateString();
+        if (userData.challengeDoneToday === today) return;
+        userData.challengeDoneToday = today;
+        userData.xp += 50;
+        saveData();
+        checkAchievements();
+        renderPanel();
+        showToast('+50 XP · Desafio semanal concluído');
+    }
+
+    function showToast(msg) {
+        const t = document.getElementById('toast');
+        t.textContent = msg;
+        t.classList.add('show');
+        setTimeout(() => t.classList.remove('show'), 3000);
+    }
+
+    // ===== INIT =====
+    loadData();
+    renderDossieLists();
+    renderMatrixGrid();
+    renderPanel();
+    showView('home');
+
+    // Track time on site
+    setInterval(() => {
+        userData.totalTime += 1;
+        if (userData.totalTime % 60 === 0) saveData();
+    }, 1000);
 </script>
 
 </body>
